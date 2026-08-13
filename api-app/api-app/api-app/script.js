@@ -1,149 +1,166 @@
-const countryInput = document.getElementById("countryInput");
-const searchButton = document.getElementById("searchButton");
-
+const searchInput = document.getElementById("countryInput");
+const searchButton = document.getElementById("searchBtn");
 const message = document.getElementById("message");
-
 const countryCard = document.getElementById("countryCard");
 
-const capital = document.getElementById("capital");
-const region = document.getElementById("region");
-const population = document.getElementById("population");
-const currency = document.getElementById("currency");
-const language = document.getElementById("language");
+searchButton.addEventListener("click", searchCountry);
 
+searchInput.addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+        searchCountry();
+    }
+});
 
 async function searchCountry() {
+    const countryName = searchInput.value.trim();
 
-    const country = countryInput.value.trim();
-
-    if (country === "") {
+    if (countryName === "") {
         message.textContent = "Please enter a country name.";
+        resetCountryCard();
         return;
     }
 
-
-    message.textContent = "Loading country information...";
-
+    message.textContent = "Searching...";
+    searchButton.disabled = true;
+    searchButton.textContent = "Searching...";
 
     try {
-
         const response = await fetch(
-            `https://restcountries.com/v3.1/name/${encodeURIComponent(country)}`
+            `https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}`
         );
-
 
         if (!response.ok) {
             throw new Error("Country not found");
         }
 
-
         const data = await response.json();
 
-        const countryData = data[0];
-
-
-        const countryName = countryData.name?.common || "Unknown";
-
-        const countryCapital =
-            countryData.capital?.[0] || "Not available";
-
-        const countryRegion =
-            countryData.region || "Not available";
-
-        const countryPopulation =
-            countryData.population
-                ? countryData.population.toLocaleString()
-                : "Not available";
-
-
-        let countryCurrency = "Not available";
-
-        if (countryData.currencies) {
-
-            const currencyCode =
-                Object.keys(countryData.currencies)[0];
-
-            const currencyName =
-                countryData.currencies[currencyCode]?.name;
-
-            countryCurrency =
-                currencyName
-                    ? `${currencyName} (${currencyCode})`
-                    : currencyCode;
+        if (!data || data.length === 0) {
+            throw new Error("Country not found");
         }
 
+        const country = data[0];
 
-        let countryLanguage = "Not available";
+        const flag = country.flag || "🌍";
+        const name = country.name?.common || "N/A";
+        const officialName = country.name?.official || "N/A";
+        const capital = country.capital?.[0] || "N/A";
+        const region = country.region || "N/A";
 
-        if (countryData.languages) {
+        const population = country.population
+            ? country.population.toLocaleString()
+            : "N/A";
 
-            countryLanguage =
-                Object.values(countryData.languages).join(", ");
-        }
+        const currency = country.currencies
+            ? Object.values(country.currencies)[0]?.name || "N/A"
+            : "N/A";
 
+        const language = country.languages
+            ? Object.values(country.languages)[0] || "N/A"
+            : "N/A";
 
-        document.querySelector(".country-card h2").textContent =
-            countryName;
+        message.textContent = "Country found successfully!";
 
-        capital.textContent =
-            countryCapital;
+        countryCard.innerHTML = `
+            <div class="country-flag">
+                ${flag}
+            </div>
 
-        region.textContent =
-            countryRegion;
+            <h2>${name}</h2>
 
-        population.textContent =
-            countryPopulation;
+            <div class="country-info">
 
-        currency.textContent =
-            countryCurrency;
+                <p>
+                    <strong>CAPITAL</strong>
+                    <span>${capital}</span>
+                </p>
 
-        language.textContent =
-            countryLanguage;
+                <p>
+                    <strong>REGION</strong>
+                    <span>${region}</span>
+                </p>
 
+                <p>
+                    <strong>POPULATION</strong>
+                    <span>${population}</span>
+                </p>
 
-        const flag =
-            countryData.flags?.emoji || "🌍";
+                <p>
+                    <strong>CURRENCY</strong>
+                    <span>${currency}</span>
+                </p>
 
-        document.querySelector(".country-flag").textContent =
-            flag;
+                <p>
+                    <strong>LANGUAGE</strong>
+                    <span>${language}</span>
+                </p>
 
+                <p>
+                    <strong>OFFICIAL NAME</strong>
+                    <span>${officialName}</span>
+                </p>
 
-        message.textContent =
-            "Country information loaded successfully.";
+            </div>
+        `;
 
     } catch (error) {
 
         message.textContent =
-            "Country not found. Please try another country.";
+            "Country not found. Please check the spelling.";
 
-        document.querySelector(".country-card h2").textContent =
-            "Search a country";
+        countryCard.innerHTML = `
+            <div class="country-flag">
+                🌍
+            </div>
 
-        capital.textContent = "—";
-        region.textContent = "—";
-        population.textContent = "—";
-        currency.textContent = "—";
-        language.textContent = "—";
+            <h2>Sorry!</h2>
 
-        document.querySelector(".country-flag").textContent =
-            "🌍";
+            <p class="description">
+                We could not find that country.
+                Please check the spelling and try again.
+            </p>
+        `;
+
+    } finally {
+
+        searchButton.disabled = false;
+        searchButton.textContent = "Search";
     }
 }
 
 
-searchButton.addEventListener(
-    "click",
-    searchCountry
-);
+function resetCountryCard() {
 
+    countryCard.innerHTML = `
+        <div class="country-flag">
+            🌍
+        </div>
 
-countryInput.addEventListener(
-    "keydown",
-    function (event) {
+        <h2>Search a country</h2>
 
-        if (event.key === "Enter") {
-            searchCountry();
-        }
+        <div class="country-info">
 
-    }
-);
+            <p>
+                <strong>CAPITAL</strong>
+                <span>—</span>
+            </p>
+
+            <p>
+                <strong>REGION</strong>
+                <span>—</span>
+            </p>
+
+            <p>
+                <strong>POPULATION</strong>
+                <span>—</span>
+            </p>
+
+            <p>
+                <strong>CURRENCY</strong>
+                <span>—</span>
+            </p>
+
+        </div>
+    `;
+}
+
