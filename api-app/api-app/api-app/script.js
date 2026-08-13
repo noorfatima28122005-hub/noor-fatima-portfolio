@@ -1,27 +1,27 @@
-const input =
-    document.querySelector("#countryInput") ||
-    document.querySelector("#searchInput") ||
-    document.querySelector(".search-box input");
+const searchInput = document.getElementById("countryInput");
+const searchButton = document.getElementById("searchButton");
+const message = document.getElementById("message");
+const countryCard = document.getElementById("countryCard");
 
-const button =
-    document.querySelector("#searchBtn") ||
-    document.querySelector("#searchButton") ||
-    document.querySelector(".search-box button");
+searchButton.addEventListener("click", searchCountry);
 
-const message = document.querySelector("#message");
-const countryCard = document.querySelector(".country-card");
+searchInput.addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+        searchCountry();
+    }
+});
 
 async function searchCountry() {
-    const countryName = input.value.trim();
+    const countryName = searchInput.value.trim();
 
-    if (!countryName) {
+    if (countryName === "") {
         message.textContent = "Please enter a country name.";
-        countryCard.style.display = "none";
+        countryCard.innerHTML = "";
         return;
     }
 
     message.textContent = "Searching...";
-    countryCard.style.display = "none";
+    countryCard.innerHTML = "";
 
     try {
         const response = await fetch(
@@ -37,19 +37,19 @@ async function searchCountry() {
 
         const flag = country.flags?.emoji || "🌍";
         const name = country.name?.common || "N/A";
-        const officialName = country.name?.official || "N/A";
         const capital = country.capital?.[0] || "N/A";
         const region = country.region || "N/A";
-        const subregion = country.subregion || "N/A";
         const population = country.population
             ? country.population.toLocaleString()
             : "N/A";
         const currency = country.currencies
             ? Object.values(country.currencies)[0]?.name || "N/A"
             : "N/A";
-        const languages = country.languages
-            ? Object.values(country.languages).join(", ")
+        const language = country.languages
+            ? Object.values(country.languages)[0] || "N/A"
             : "N/A";
+
+        message.textContent = "Country found successfully!";
 
         countryCard.innerHTML = `
             <div class="country-flag">${flag}</div>
@@ -57,58 +57,43 @@ async function searchCountry() {
             <h2>${name}</h2>
 
             <div class="country-info">
-                <p>
-                    <strong>Official Name</strong>
-                    ${officialName}
-                </p>
 
                 <p>
-                    <strong>Capital</strong>
+                    <strong>CAPITAL</strong>
                     ${capital}
                 </p>
 
                 <p>
-                    <strong>Region</strong>
+                    <strong>REGION</strong>
                     ${region}
                 </p>
 
                 <p>
-                    <strong>Subregion</strong>
-                    ${subregion}
-                </p>
-
-                <p>
-                    <strong>Population</strong>
+                    <strong>POPULATION</strong>
                     ${population}
                 </p>
 
                 <p>
-                    <strong>Currency</strong>
+                    <strong>CURRENCY</strong>
                     ${currency}
                 </p>
 
                 <p>
-                    <strong>Languages</strong>
-                    ${languages}
+                    <strong>LANGUAGE</strong>
+                    ${language}
                 </p>
+
             </div>
         `;
-
-        message.textContent = "Country found successfully.";
-        countryCard.style.display = "block";
-
     } catch (error) {
-        message.textContent =
-            "Country not found. Please check the spelling and try again.";
-
-        countryCard.style.display = "none";
+        message.textContent = "Country not found.";
+        countryCard.innerHTML = `
+            <div class="country-flag">🌍</div>
+            <h2>Sorry!</h2>
+            <p class="description">
+                We could not find that country. Please check the spelling
+                and try again.
+            </p>
+        `;
     }
 }
-
-button.addEventListener("click", searchCountry);
-
-input.addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-        searchCountry();
-    }
-});
