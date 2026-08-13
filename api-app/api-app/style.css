@@ -1,0 +1,440 @@
+```css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #17233d;
+    background: #f7faff;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.background-grid {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+
+    background:
+        radial-gradient(
+            circle at 10% 15%,
+            rgba(14, 165, 233, 0.10),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 90% 20%,
+            rgba(99, 102, 241, 0.10),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #f8fcff,
+            #f7faff 45%,
+            #f8f7ff
+        );
+}
+
+.background-grid::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background-image:
+        linear-gradient(
+            rgba(30, 100, 180, 0.045) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(30, 100, 180, 0.045) 1px,
+            transparent 1px
+        );
+
+    background-size: 42px 42px;
+}
+
+
+/* NAVBAR */
+
+.navbar {
+    height: 76px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 max(20px, calc((100vw - 1120px) / 2));
+
+    background: rgba(255, 255, 255, 0.88);
+
+    border-bottom: 1px solid rgba(30, 80, 140, 0.09);
+
+    backdrop-filter: blur(16px);
+}
+
+.logo {
+    font-size: 21px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.logo span,
+.footer-logo span {
+    color: #0ea5e9;
+}
+
+.back-link {
+    color: #087fbd;
+    font-size: 12px;
+    font-weight: 800;
+
+    transition: color 0.2s ease;
+}
+
+.back-link:hover {
+    color: #6366f1;
+}
+
+
+/* MAIN */
+
+.app-section {
+    min-height: calc(100vh - 150px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 80px 20px;
+}
+
+.app-container {
+    width: min(760px, 100%);
+
+    text-align: center;
+}
+
+.section-label {
+    margin-bottom: 15px;
+
+    color: #0b91c9;
+
+    font-size: 10px;
+    font-weight: 900;
+
+    letter-spacing: 4px;
+}
+
+h1 {
+    margin-bottom: 18px;
+
+    color: #17233d;
+
+    font-size: clamp(42px, 7vw, 68px);
+
+    font-weight: 900;
+
+    line-height: 1.05;
+
+    letter-spacing: -2px;
+}
+
+h1 span {
+    color: #168bd1;
+}
+
+.description {
+    max-width: 580px;
+
+    margin: 0 auto 30px;
+
+    color: #66758d;
+
+    font-size: 14px;
+
+    line-height: 1.8;
+}
+
+
+/* SEARCH */
+
+.search-box {
+    width: min(600px, 100%);
+
+    display: flex;
+
+    margin: 0 auto 20px;
+
+    padding: 6px;
+
+    background: rgba(255, 255, 255, 0.9);
+
+    border: 1px solid rgba(14, 165, 233, 0.18);
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 15px 40px rgba(30, 80, 140, 0.08);
+}
+
+.search-box input {
+    flex: 1;
+
+    min-width: 0;
+
+    padding: 13px 15px;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: #17233d;
+
+    font-size: 13px;
+}
+
+.search-box input::placeholder {
+    color: #9aa8bb;
+}
+
+.search-box button {
+    padding: 13px 22px;
+
+    border: none;
+    border-radius: 8px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            100deg,
+            #049fd4,
+            #168bd1,
+            #6366f1
+        );
+
+    font-size: 12px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.search-box button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 25px rgba(14, 165, 233, 0.20);
+}
+
+#message {
+    min-height: 22px;
+
+    margin-bottom: 12px;
+
+    color: #687790;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* COUNTRY CARD */
+
+.country-card {
+    width: min(520px, 100%);
+
+    margin: 10px auto 0;
+
+    padding: 35px 30px;
+
+    background: rgba(255, 255, 255, 0.90);
+
+    border: 1px solid rgba(45, 90, 145, 0.10);
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 20px 50px rgba(30, 70, 120, 0.09);
+}
+
+.country-flag {
+    width: 80px;
+    height: 80px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 20px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(14, 165, 233, 0.08),
+            rgba(99, 102, 241, 0.08)
+        );
+
+    border: 1px solid rgba(14, 165, 233, 0.18);
+
+    font-size: 35px;
+}
+
+.country-card h2 {
+    margin-bottom: 25px;
+
+    color: #17233d;
+
+    font-size: 27px;
+}
+
+.country-info {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+}
+
+.country-info p {
+    padding: 14px;
+
+    text-align: left;
+
+    background: #f6f9fd;
+
+    border: 1px solid #e2eaf3;
+
+    border-radius: 9px;
+
+    color: #687790;
+
+    font-size: 11px;
+}
+
+.country-info strong {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #087fbd;
+
+    font-size: 10px;
+}
+
+
+/* FOOTER */
+
+footer {
+    padding: 30px 20px;
+
+    text-align: center;
+
+    background: #17233d;
+
+    color: #ffffff;
+}
+
+.footer-logo {
+    margin-bottom: 7px;
+
+    font-size: 18px;
+    font-weight: 900;
+
+    letter-spacing: 2px;
+}
+
+footer p {
+    margin-bottom: 8px;
+
+    color: #9cabc0;
+
+    font-size: 10px;
+}
+
+footer small {
+    color: #687993;
+
+    font-size: 8px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .navbar {
+        height: auto;
+        min-height: 70px;
+
+        padding: 18px 15px;
+    }
+
+    .logo {
+        font-size: 18px;
+    }
+
+    .back-link {
+        font-size: 10px;
+    }
+
+    .app-section {
+        padding: 65px 14px;
+    }
+
+    .section-label {
+        font-size: 8px;
+        letter-spacing: 3px;
+    }
+
+    h1 {
+        font-size: 42px;
+    }
+
+    .description {
+        font-size: 12px;
+    }
+
+    .search-box {
+        flex-direction: column;
+        gap: 6px;
+
+        padding: 7px;
+    }
+
+    .search-box input {
+        width: 100%;
+
+        text-align: center;
+    }
+
+    .search-box button {
+        width: 100%;
+    }
+
+    .country-card {
+        padding: 28px 18px;
+    }
+
+    .country-info {
+        grid-template-columns: 1fr;
+    }
+}
+```
