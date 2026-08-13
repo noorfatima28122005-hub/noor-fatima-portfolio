@@ -1,592 +1,363 @@
-// =========================================================
-// NOOR FATIMA — PREMIUM PORTFOLIO
-// FINAL JAVASCRIPT
-// =========================================================
+document.addEventListener("DOMContentLoaded", function () {
 
-document.addEventListener("DOMContentLoaded", () => {
+    /* =========================================
+       GET HTML ELEMENTS
+    ========================================= */
 
-    // =====================================================
-    // 1. NAVBAR SCROLL EFFECT
-    // =====================================================
+    const taskInput = document.getElementById("taskInput");
+    const addTaskBtn = document.getElementById("addTaskBtn");
+    const tasksList = document.getElementById("tasksList");
+    const taskCount = document.getElementById("taskCount");
+    const clearCompleted = document.getElementById("clearCompleted");
 
-    const navbar = document.querySelector(".navbar");
 
-    const updateNavbar = () => {
+    /* =========================================
+       LOAD TASKS
+    ========================================= */
 
-        if (!navbar) return;
+    let tasks = [];
 
-        if (window.scrollY > 35) {
-            navbar.classList.add("scrolled");
+    try {
+        tasks = JSON.parse(
+            localStorage.getItem("noorTasks")
+        ) || [];
+    } catch (error) {
+        tasks = [];
+    }
+
+
+    /* =========================================
+       SAVE TASKS
+    ========================================= */
+
+    function saveTasks() {
+
+        localStorage.setItem(
+            "noorTasks",
+            JSON.stringify(tasks)
+        );
+
+    }
+
+
+    /* =========================================
+       UPDATE TASK COUNT
+    ========================================= */
+
+    function updateTaskCount() {
+
+        const remainingTasks = tasks.filter(function (task) {
+            return !task.completed;
+        }).length;
+
+
+        if (remainingTasks === 1) {
+
+            taskCount.textContent = "1 Task";
+
         } else {
-            navbar.classList.remove("scrolled");
+
+            taskCount.textContent =
+                remainingTasks + " Tasks";
+
         }
 
-    };
-
-    window.addEventListener("scroll", updateNavbar, {
-        passive: true
-    });
-
-    updateNavbar();
+    }
 
 
-    // =====================================================
-    // 2. SMOOTH SCROLL
-    // =====================================================
+    /* =========================================
+       SHOW EMPTY STATE
+    ========================================= */
 
-    const navigationLinks =
-        document.querySelectorAll(
-            '.nav-links a[href^="#"]'
-        );
+    function showEmptyState() {
 
-    navigationLinks.forEach((link) => {
+        tasksList.innerHTML = `
+            <div class="empty-state">
 
-        link.addEventListener("click", (event) => {
+                <div class="empty-icon">
+                    ✓
+                </div>
 
-            const targetId =
-                link.getAttribute("href");
+                <h2>
+                    No tasks yet
+                </h2>
 
-            if (
-                !targetId ||
-                targetId === "#"
-            ) {
-                return;
-            }
+                <p>
+                    Add your first task and start being productive.
+                </p>
 
-            const target =
-                document.querySelector(targetId);
-
-            if (!target) {
-                return;
-            }
-
-            event.preventDefault();
-
-            target.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-
-        });
-
-    });
-
-
-    // =====================================================
-    // 3. SCROLL REVEAL
-    // =====================================================
-
-    const revealElements =
-        document.querySelectorAll(
-            ".section, .skill-card, .project-card, .contact-box"
-        );
-
-    revealElements.forEach((element) => {
-        element.classList.add("reveal");
-    });
-
-
-    if ("IntersectionObserver" in window) {
-
-        const revealObserver =
-            new IntersectionObserver(
-                (entries, observer) => {
-
-                    entries.forEach((entry) => {
-
-                        if (entry.isIntersecting) {
-
-                            entry.target.classList.add("show");
-
-                            observer.unobserve(
-                                entry.target
-                            );
-
-                        }
-
-                    });
-
-                },
-                {
-                    threshold: 0.12
-                }
-            );
-
-
-        revealElements.forEach((element) => {
-            revealObserver.observe(element);
-        });
-
-    } else {
-
-        revealElements.forEach((element) => {
-            element.classList.add("show");
-        });
+            </div>
+        `;
 
     }
 
 
-    // =====================================================
-    // 4. STAGGERED CARD ANIMATION
-    // =====================================================
+    /* =========================================
+       DISPLAY TASKS
+    ========================================= */
 
-    const cardGroups = [
-        ".skill-card",
-        ".project-card"
-    ];
+    function renderTasks() {
 
-    cardGroups.forEach((selector) => {
-
-        const cards =
-            document.querySelectorAll(selector);
-
-        cards.forEach((card, index) => {
-
-            card.style.transitionDelay =
-                `${index * 80}ms`;
-
-        });
-
-    });
+        tasksList.innerHTML = "";
 
 
-    // =====================================================
-    // 5. HERO MOUSE PARALLAX
-    // =====================================================
+        if (tasks.length === 0) {
 
-    const hero =
-        document.querySelector(".hero");
+            showEmptyState();
 
-    const heroContent =
-        document.querySelector(".hero-content");
+            updateTaskCount();
 
-    const glowOne =
-        document.querySelector(".glow-one");
-
-    const glowTwo =
-        document.querySelector(".glow-two");
-
-
-    if (
-        hero &&
-        window.matchMedia(
-            "(pointer: fine)"
-        ).matches
-    ) {
-
-        hero.addEventListener(
-            "mousemove",
-            (event) => {
-
-                const rect =
-                    hero.getBoundingClientRect();
-
-                const x =
-                    (event.clientX - rect.left)
-                    / rect.width - 0.5;
-
-                const y =
-                    (event.clientY - rect.top)
-                    / rect.height - 0.5;
-
-
-                if (heroContent) {
-
-                    heroContent.style.transform =
-                        `translate3d(
-                            ${x * 5}px,
-                            ${y * 5}px,
-                            0
-                        )`;
-
-                }
-
-
-                if (glowOne) {
-
-                    glowOne.style.transform =
-                        `translate(
-                            ${x * 25}px,
-                            ${y * 25}px
-                        )`;
-
-                }
-
-
-                if (glowTwo) {
-
-                    glowTwo.style.transform =
-                        `translate(
-                            ${x * -20}px,
-                            ${y * -20}px
-                        )`;
-
-                }
-
-            }
-        );
-
-
-        hero.addEventListener(
-            "mouseleave",
-            () => {
-
-                if (heroContent) {
-                    heroContent.style.transform =
-                        "translate3d(0,0,0)";
-                }
-
-                if (glowOne) {
-                    glowOne.style.transform =
-                        "translate(0,0)";
-                }
-
-                if (glowTwo) {
-                    glowTwo.style.transform =
-                        "translate(0,0)";
-                }
-
-            }
-        );
-
-    }
-
-
-    // =====================================================
-    // 6. PROJECT CARD TILT EFFECT
-    // =====================================================
-
-    const projectCards =
-        document.querySelectorAll(
-            ".project-card"
-        );
-
-
-    projectCards.forEach((card) => {
-
-        if (
-            !window.matchMedia(
-                "(pointer: fine)"
-            ).matches
-        ) {
             return;
         }
 
 
-        card.addEventListener(
-            "mousemove",
-            (event) => {
+        tasks.forEach(function (task) {
 
-                const rect =
-                    card.getBoundingClientRect();
+            const taskElement =
+                document.createElement("div");
 
-                const x =
-                    event.clientX - rect.left;
-
-                const y =
-                    event.clientY - rect.top;
-
-                const centerX =
-                    rect.width / 2;
-
-                const centerY =
-                    rect.height / 2;
-
-                const rotateX =
-                    (y - centerY) / 30;
-
-                const rotateY =
-                    (centerX - x) / 30;
+            taskElement.className = "task";
 
 
-                card.style.transform =
-                    `perspective(900px)
-                     rotateX(${rotateX}deg)
-                     rotateY(${rotateY}deg)
-                     translateY(-8px)`;
+            if (task.completed) {
+
+                taskElement.classList.add(
+                    "completed"
+                );
 
             }
-        );
 
 
-        card.addEventListener(
-            "mouseleave",
-            () => {
+            /* CHECK BUTTON */
 
-                card.style.transform =
-                    "";
+            const checkButton =
+                document.createElement("button");
 
-            }
-        );
+            checkButton.className =
+                "check-btn";
 
-    });
+            checkButton.type = "button";
 
-
-    // =====================================================
-    // 7. SKILL CARD INTERACTION
-    // =====================================================
-
-    const skillCards =
-        document.querySelectorAll(
-            ".skill-card"
-        );
+            checkButton.textContent = "✓";
 
 
-    skillCards.forEach((card) => {
+            checkButton.addEventListener(
+                "click",
+                function () {
 
-        card.addEventListener(
-            "mouseenter",
-            () => {
+                    toggleTask(task.id);
 
-                card.classList.add("active");
-
-            }
-        );
-
-
-        card.addEventListener(
-            "mouseleave",
-            () => {
-
-                card.classList.remove("active");
-
-            }
-        );
-
-    });
-
-
-    // =====================================================
-    // 8. ACTIVE NAVIGATION
-    // =====================================================
-
-    const sections =
-        document.querySelectorAll(
-            "section[id]"
-        );
-
-    const navLinks =
-        document.querySelectorAll(
-            ".nav-links a"
-        );
-
-
-    if (
-        sections.length &&
-        navLinks.length &&
-        "IntersectionObserver" in window
-    ) {
-
-        const activeObserver =
-            new IntersectionObserver(
-                (entries) => {
-
-                    entries.forEach((entry) => {
-
-                        if (
-                            !entry.isIntersecting
-                        ) {
-                            return;
-                        }
-
-
-                        const currentId =
-                            entry.target.getAttribute(
-                                "id"
-                            );
-
-
-                        navLinks.forEach((link) => {
-
-                            link.classList.remove(
-                                "active"
-                            );
-
-
-                            if (
-                                link.getAttribute(
-                                    "href"
-                                ) ===
-                                `#${currentId}`
-                            ) {
-
-                                link.classList.add(
-                                    "active"
-                                );
-
-                            }
-
-                        });
-
-                    });
-
-                },
-                {
-                    rootMargin:
-                        "-35% 0px -55% 0px"
                 }
             );
 
 
-        sections.forEach((section) => {
-            activeObserver.observe(section);
+            /* TASK TEXT */
+
+            const taskText =
+                document.createElement("span");
+
+            taskText.className =
+                "task-text";
+
+            taskText.textContent =
+                task.text;
+
+
+            /* DELETE BUTTON */
+
+            const deleteButton =
+                document.createElement("button");
+
+            deleteButton.className =
+                "delete-btn";
+
+            deleteButton.type = "button";
+
+            deleteButton.textContent = "×";
+
+
+            deleteButton.addEventListener(
+                "click",
+                function () {
+
+                    deleteTask(task.id);
+
+                }
+            );
+
+
+            /* ADD ELEMENTS */
+
+            taskElement.appendChild(
+                checkButton
+            );
+
+            taskElement.appendChild(
+                taskText
+            );
+
+            taskElement.appendChild(
+                deleteButton
+            );
+
+
+            tasksList.appendChild(
+                taskElement
+            );
+
         });
 
+
+        updateTaskCount();
+
     }
 
 
-    // =====================================================
-    // 9. EMAIL PROTECTION / CONSISTENCY
-    // =====================================================
+    /* =========================================
+       ADD TASK
+    ========================================= */
 
-    const email =
-        "noorfatima28122005@gmail.com";
+    function addTask() {
 
-
-    const emailLinks =
-        document.querySelectorAll(
-            'a[href^="mailto:"]'
-        );
+        const text =
+            taskInput.value.trim();
 
 
-    emailLinks.forEach((link) => {
+        if (text === "") {
 
-        link.setAttribute(
-            "href",
-            `mailto:${email}`
-        );
+            taskInput.focus();
 
-    });
+            return;
 
-
-    // =====================================================
-    // 10. EXTERNAL LINKS
-    // =====================================================
-
-    const externalLinks =
-        document.querySelectorAll(
-            'a[href^="http"]'
-        );
+        }
 
 
-    externalLinks.forEach((link) => {
+        const newTask = {
 
-        link.setAttribute(
-            "target",
-            "_blank"
-        );
+            id: Date.now(),
 
-        link.setAttribute(
-            "rel",
-            "noopener noreferrer"
-        );
+            text: text,
 
-    });
+            completed: false
+
+        };
 
 
-    // =====================================================
-    // 11. CONTACT EMAIL COPY
-    // =====================================================
-
-    const emailButton =
-        document.querySelector(
-            ".email-button"
-        );
+        tasks.unshift(newTask);
 
 
-    if (emailButton) {
+        saveTasks();
 
-        emailButton.addEventListener(
-            "click",
-            () => {
+        renderTasks();
 
-                emailButton.classList.add(
-                    "clicked"
-                );
 
-                setTimeout(() => {
+        taskInput.value = "";
 
-                    emailButton.classList.remove(
-                        "clicked"
-                    );
+        taskInput.focus();
 
-                }, 800);
+    }
+
+
+    /* =========================================
+       COMPLETE TASK
+    ========================================= */
+
+    function toggleTask(id) {
+
+        tasks = tasks.map(function (task) {
+
+            if (task.id === id) {
+
+                return {
+                    id: task.id,
+                    text: task.text,
+                    completed: !task.completed
+                };
 
             }
-        );
+
+            return task;
+
+        });
+
+
+        saveTasks();
+
+        renderTasks();
 
     }
 
 
-    // =====================================================
-    // 12. CURRENT YEAR
-    // =====================================================
+    /* =========================================
+       DELETE TASK
+    ========================================= */
 
-    const footerYear =
-        document.querySelector(
-            "footer small"
-        );
+    function deleteTask(id) {
+
+        tasks = tasks.filter(function (task) {
+
+            return task.id !== id;
+
+        });
 
 
-    if (footerYear) {
+        saveTasks();
 
-        footerYear.textContent =
-            `© ${new Date().getFullYear()} Noor Fatima. All Rights Reserved.`;
+        renderTasks();
 
     }
 
 
-    // =====================================================
-    // 13. SCROLL TO TOP WHEN LOGO IS CLICKED
-    // =====================================================
+    /* =========================================
+       CLEAR COMPLETED
+    ========================================= */
 
-    const logo =
-        document.querySelector(".logo");
+    clearCompleted.addEventListener(
+        "click",
+        function () {
+
+            tasks = tasks.filter(function (task) {
+
+                return !task.completed;
+
+            });
 
 
-    if (logo) {
+            saveTasks();
 
-        logo.addEventListener(
-            "click",
-            (event) => {
+            renderTasks();
 
-                const home =
-                    document.querySelector("#home");
+        }
+    );
 
-                if (!home) return;
+
+    /* =========================================
+       ADD BUTTON
+    ========================================= */
+
+    addTaskBtn.addEventListener(
+        "click",
+        function () {
+
+            addTask();
+
+        }
+    );
+
+
+    /* =========================================
+       ENTER KEY
+    ========================================= */
+
+    taskInput.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (event.key === "Enter") {
 
                 event.preventDefault();
 
-                home.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-
-            }
-        );
-
-    }
-
-
-    // =====================================================
-    // 14. ESCAPE KEY
-    // =====================================================
-
-    document.addEventListener(
-        "keydown",
-        (event) => {
-
-            if (event.key === "Escape") {
-
-                document
-                    .querySelectorAll(".active")
-                    .forEach((element) => {
-
-                        element.classList.remove(
-                            "active"
-                        );
-
-                    });
+                addTask();
 
             }
 
@@ -594,30 +365,10 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
 
-    // =====================================================
-    // 15. PAGE LOADED
-    // =====================================================
+    /* =========================================
+       START APP
+    ========================================= */
 
-    requestAnimationFrame(() => {
-
-        document.body.classList.add(
-            "loaded"
-        );
-
-    });
-
-
-    // =====================================================
-    // 16. CONSOLE
-    // =====================================================
-
-    console.log(
-        "%c Noor Fatima Portfolio ",
-        "background:#63e6e2;color:#070b12;font-weight:700;padding:8px 12px;border-radius:6px;"
-    );
-
-    console.log(
-        "Premium portfolio loaded successfully."
-    );
+    renderTasks();
 
 });
