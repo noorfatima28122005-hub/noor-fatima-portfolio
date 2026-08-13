@@ -1,1 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noor Fatima | To-Do App</title>
 
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="app-container">
+
+        <header class="app-header">
+            <div class="status">
+                <span></span>
+                PRODUCTIVITY APP
+            </div>
+
+            <h1>My <span>Tasks</span></h1>
+
+            <p>Organize your day. Stay focused. Get things done.</p>
+        </header>
+
+        <section class="todo-card">
+
+            <div class="input-area">
+                <input
+                    type="text"
+                    id="taskInput"
+                    placeholder="What do you need to do?"
+                    autocomplete="off"
+                >
+
+                <button id="addTaskBtn">
+                    + Add Task
+                </button>
+            </div>
+
+            <div class="task-info">
+                <span id="taskCount">0 Tasks</span>
+
+                <button id="clearCompleted">
+                    Clear Completed
+                </button>
+            </div>
+
+            <div class="tasks-list" id="tasksList">
+
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-icon">✓</div>
+
+                    <h2>No tasks yet</h2>
+
+                    <p>
+                        Add your first task and start being productive.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <a href="../index.html" class="back-link">
+            ← Back to Portfolio
+        </a>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
