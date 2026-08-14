@@ -5,7 +5,7 @@ const countryCard = document.getElementById("countryCard");
 
 searchButton.addEventListener("click", searchCountry);
 
-searchInput.addEventListener("keypress", function (event) {
+searchInput.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
         searchCountry();
     }
@@ -14,15 +14,12 @@ searchInput.addEventListener("keypress", function (event) {
 async function searchCountry() {
     const countryName = searchInput.value.trim();
 
-    if (countryName === "") {
+    if (!countryName) {
         message.textContent = "Please enter a country name.";
-        resetCountryCard();
         return;
     }
 
     message.textContent = "Searching...";
-    searchButton.disabled = true;
-    searchButton.textContent = "Searching...";
 
     try {
         const response = await fetch(
@@ -34,16 +31,10 @@ async function searchCountry() {
         }
 
         const data = await response.json();
-
-        if (!data || data.length === 0) {
-            throw new Error("Country not found");
-        }
-
         const country = data[0];
 
-        const flag = country.flag || "🌍";
         const name = country.name?.common || "N/A";
-        const officialName = country.name?.official || "N/A";
+        const flag = country.flag || "🌍";
         const capital = country.capital?.[0] || "N/A";
         const region = country.region || "N/A";
 
@@ -62,56 +53,45 @@ async function searchCountry() {
         message.textContent = "Country found successfully!";
 
         countryCard.innerHTML = `
-            <div class="country-flag">
-                ${flag}
-            </div>
+            <div class="country-flag">${flag}</div>
 
             <h2>${name}</h2>
 
             <div class="country-info">
 
                 <p>
-                    <strong>CAPITAL</strong>
+                    <strong>Capital:</strong>
                     <span>${capital}</span>
                 </p>
 
                 <p>
-                    <strong>REGION</strong>
+                    <strong>Region:</strong>
                     <span>${region}</span>
                 </p>
 
                 <p>
-                    <strong>POPULATION</strong>
+                    <strong>Population:</strong>
                     <span>${population}</span>
                 </p>
 
                 <p>
-                    <strong>CURRENCY</strong>
+                    <strong>Currency:</strong>
                     <span>${currency}</span>
                 </p>
 
                 <p>
-                    <strong>LANGUAGE</strong>
+                    <strong>Language:</strong>
                     <span>${language}</span>
-                </p>
-
-                <p>
-                    <strong>OFFICIAL NAME</strong>
-                    <span>${officialName}</span>
                 </p>
 
             </div>
         `;
 
     } catch (error) {
-
-        message.textContent =
-            "Country not found. Please check the spelling.";
+        message.textContent = "Country not found.";
 
         countryCard.innerHTML = `
-            <div class="country-flag">
-                🌍
-            </div>
+            <div class="country-flag">🌍</div>
 
             <h2>Sorry!</h2>
 
@@ -120,47 +100,5 @@ async function searchCountry() {
                 Please check the spelling and try again.
             </p>
         `;
-
-    } finally {
-
-        searchButton.disabled = false;
-        searchButton.textContent = "Search";
     }
 }
-
-
-function resetCountryCard() {
-
-    countryCard.innerHTML = `
-        <div class="country-flag">
-            🌍
-        </div>
-
-        <h2>Search a country</h2>
-
-        <div class="country-info">
-
-            <p>
-                <strong>CAPITAL</strong>
-                <span>—</span>
-            </p>
-
-            <p>
-                <strong>REGION</strong>
-                <span>—</span>
-            </p>
-
-            <p>
-                <strong>POPULATION</strong>
-                <span>—</span>
-            </p>
-
-            <p>
-                <strong>CURRENCY</strong>
-                <span>—</span>
-            </p>
-
-        </div>
-    `;
-}
-
