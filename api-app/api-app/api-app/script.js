@@ -16,6 +16,10 @@ async function searchCountry() {
 
     if (!countryName) {
         message.textContent = "Please enter a country name.";
+        countryCard.innerHTML = `
+            <div class="country-flag">🌍</div>
+            <h2>Search a country</h2>
+        `;
         return;
     }
 
