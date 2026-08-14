@@ -1,5 +1,5 @@
 const searchInput = document.getElementById("countryInput");
-const searchButton = document.getElementById("searchBtn");
+const searchButton = document.getElementById("searchButton");
 const message = document.getElementById("message");
 const countryCard = document.getElementById("countryCard");
 
@@ -12,20 +12,38 @@ searchInput.addEventListener("keydown", function (event) {
 });
 
 async function searchCountry() {
+
     const countryName = searchInput.value.trim();
 
     if (!countryName) {
+
         message.textContent = "Please enter a country name.";
+
         countryCard.innerHTML = `
             <div class="country-flag">🌍</div>
             <h2>Search a country</h2>
+
+            <div class="country-info">
+                <p><strong>CAPITAL</strong> <span>—</span></p>
+                <p><strong>REGION</strong> <span>—</span></p>
+                <p><strong>POPULATION</strong> <span>—</span></p>
+                <p><strong>CURRENCY</strong> <span>—</span></p>
+                <p><strong>LANGUAGE</strong> <span>—</span></p>
+            </div>
         `;
+
         return;
     }
 
     message.textContent = "Searching...";
 
+    countryCard.innerHTML = `
+        <div class="country-flag">🔎</div>
+        <h2>Searching...</h2>
+    `;
+
     try {
+
         const response = await fetch(
             `https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}`
         );
@@ -38,8 +56,11 @@ async function searchCountry() {
         const country = data[0];
 
         const name = country.name?.common || "N/A";
+
         const flag = country.flag || "🌍";
+
         const capital = country.capital?.[0] || "N/A";
+
         const region = country.region || "N/A";
 
         const population = country.population
@@ -57,34 +78,36 @@ async function searchCountry() {
         message.textContent = "Country found successfully!";
 
         countryCard.innerHTML = `
-            <div class="country-flag">${flag}</div>
+            <div class="country-flag">
+                ${flag}
+            </div>
 
             <h2>${name}</h2>
 
             <div class="country-info">
 
                 <p>
-                    <strong>Capital:</strong>
+                    <strong>CAPITAL</strong>
                     <span>${capital}</span>
                 </p>
 
                 <p>
-                    <strong>Region:</strong>
+                    <strong>REGION</strong>
                     <span>${region}</span>
                 </p>
 
                 <p>
-                    <strong>Population:</strong>
+                    <strong>POPULATION</strong>
                     <span>${population}</span>
                 </p>
 
                 <p>
-                    <strong>Currency:</strong>
+                    <strong>CURRENCY</strong>
                     <span>${currency}</span>
                 </p>
 
                 <p>
-                    <strong>Language:</strong>
+                    <strong>LANGUAGE</strong>
                     <span>${language}</span>
                 </p>
 
@@ -92,6 +115,7 @@ async function searchCountry() {
         `;
 
     } catch (error) {
+
         message.textContent = "Country not found.";
 
         countryCard.innerHTML = `
