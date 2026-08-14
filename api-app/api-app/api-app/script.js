@@ -1,3 +1,4 @@
+```javascript
 const searchInput = document.getElementById("countryInput");
 const searchButton = document.getElementById("searchButton");
 const message = document.getElementById("message");
@@ -12,7 +13,6 @@ searchInput.addEventListener("keydown", function (event) {
 });
 
 async function searchCountry() {
-
     const countryName = searchInput.value.trim();
 
     if (!countryName) {
@@ -23,30 +23,11 @@ async function searchCountry() {
             <h2>Search a country</h2>
 
             <div class="country-info">
-                <p>
-                    <strong>CAPITAL</strong>
-                    <span>—</span>
-                </p>
-
-                <p>
-                    <strong>REGION</strong>
-                    <span>—</span>
-                </p>
-
-                <p>
-                    <strong>POPULATION</strong>
-                    <span>—</span>
-                </p>
-
-                <p>
-                    <strong>CURRENCY</strong>
-                    <span>—</span>
-                </p>
-
-                <p>
-                    <strong>LANGUAGE</strong>
-                    <span>—</span>
-                </p>
+                <p><strong>CAPITAL</strong><span>—</span></p>
+                <p><strong>REGION</strong><span>—</span></p>
+                <p><strong>POPULATION</strong><span>—</span></p>
+                <p><strong>CURRENCY</strong><span>—</span></p>
+                <p><strong>LANGUAGE</strong><span>—</span></p>
             </div>
         `;
 
@@ -61,7 +42,6 @@ async function searchCountry() {
     `;
 
     try {
-
         const response = await fetch(
             `https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}`
         );
@@ -93,14 +73,11 @@ async function searchCountry() {
         message.textContent = "Country found successfully!";
 
         countryCard.innerHTML = `
-            <div class="country-flag">
-                ${flag}
-            </div>
+            <div class="country-flag">${flag}</div>
 
             <h2>${name}</h2>
 
             <div class="country-info">
-
                 <p>
                     <strong>CAPITAL</strong>
                     <span>${capital}</span>
@@ -125,12 +102,9 @@ async function searchCountry() {
                     <strong>LANGUAGE</strong>
                     <span>${language}</span>
                 </p>
-
             </div>
         `;
-
     } catch (error) {
-
         message.textContent = "Country not found.";
 
         countryCard.innerHTML = `
@@ -145,3 +119,4 @@ async function searchCountry() {
         `;
     }
 }
+```
