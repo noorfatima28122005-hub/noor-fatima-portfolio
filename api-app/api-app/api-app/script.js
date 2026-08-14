@@ -16,7 +16,6 @@ async function searchCountry() {
     const countryName = searchInput.value.trim();
 
     if (!countryName) {
-
         message.textContent = "Please enter a country name.";
 
         countryCard.innerHTML = `
@@ -24,11 +23,30 @@ async function searchCountry() {
             <h2>Search a country</h2>
 
             <div class="country-info">
-                <p><strong>CAPITAL</strong> <span>—</span></p>
-                <p><strong>REGION</strong> <span>—</span></p>
-                <p><strong>POPULATION</strong> <span>—</span></p>
-                <p><strong>CURRENCY</strong> <span>—</span></p>
-                <p><strong>LANGUAGE</strong> <span>—</span></p>
+                <p>
+                    <strong>CAPITAL</strong>
+                    <span>—</span>
+                </p>
+
+                <p>
+                    <strong>REGION</strong>
+                    <span>—</span>
+                </p>
+
+                <p>
+                    <strong>POPULATION</strong>
+                    <span>—</span>
+                </p>
+
+                <p>
+                    <strong>CURRENCY</strong>
+                    <span>—</span>
+                </p>
+
+                <p>
+                    <strong>LANGUAGE</strong>
+                    <span>—</span>
+                </p>
             </div>
         `;
 
@@ -56,11 +74,8 @@ async function searchCountry() {
         const country = data[0];
 
         const name = country.name?.common || "N/A";
-
         const flag = country.flag || "🌍";
-
         const capital = country.capital?.[0] || "N/A";
-
         const region = country.region || "N/A";
 
         const population = country.population
