@@ -1,4 +1,3 @@
-```javascript
 const searchInput = document.getElementById("countryInput");
 const searchButton = document.getElementById("searchButton");
 const message = document.getElementById("message");
@@ -13,7 +12,6 @@ searchInput.addEventListener("keydown", function (event) {
 });
 
 async function searchCountry() {
-
     const countryName = searchInput.value.trim();
 
     if (!countryName) {
@@ -24,30 +22,11 @@ async function searchCountry() {
             <h2>Search a country</h2>
 
             <div class="country-info">
-                <p>
-                    <strong>CAPITAL</strong>
-                    <span>—</span>
-                </p>
-
-                <p>
-                    <strong>REGION</strong>
-                    <span>—</span>
-                </p>
-
-                <p>
-                    <strong>POPULATION</strong>
-                    <span>—</span>
-                </p>
-
-                <p>
-                    <strong>CURRENCY</strong>
-                    <span>—</span>
-                </p>
-
-                <p>
-                    <strong>LANGUAGE</strong>
-                    <span>—</span>
-                </p>
+                <p><strong>CAPITAL</strong><span>—</span></p>
+                <p><strong>REGION</strong><span>—</span></p>
+                <p><strong>POPULATION</strong><span>—</span></p>
+                <p><strong>CURRENCY</strong><span>—</span></p>
+                <p><strong>LANGUAGE</strong><span>—</span></p>
             </div>
         `;
 
@@ -62,7 +41,6 @@ async function searchCountry() {
     `;
 
     try {
-
         const response = await fetch(
             `https://countries.dev/name/${encodeURIComponent(countryName)}`
         );
@@ -80,26 +58,25 @@ async function searchCountry() {
         const country = data[0];
 
         const name = country.name || "N/A";
-
         const flag = country.flag || "🌍";
-
         const capital = country.capital || "N/A";
-
         const region = country.region || "N/A";
 
         const population = country.population
             ? country.population.toLocaleString()
             : "N/A";
 
-        const currency = country.currencies &&
+        const currency =
+            country.currencies &&
             country.currencies.length > 0
-            ? country.currencies[0].name
-            : "N/A";
+                ? country.currencies[0].name
+                : "N/A";
 
-        const language = country.languages &&
+        const language =
+            country.languages &&
             country.languages.length > 0
-            ? country.languages[0].name
-            : "N/A";
+                ? country.languages[0].name
+                : "N/A";
 
         message.textContent = "Country found successfully!";
 
@@ -141,7 +118,6 @@ async function searchCountry() {
         `;
 
     } catch (error) {
-
         message.textContent = "Country not found.";
 
         countryCard.innerHTML = `
@@ -156,4 +132,3 @@ async function searchCountry() {
         `;
     }
 }
-```
