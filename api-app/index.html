@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,155 +8,184 @@
 
     <meta
         name="description"
-        content="API Based Web App - Country Information"
+        content="Noor Fatima - API Based Web Application"
+    >
+
+    <meta
+        name="author"
+        content="Noor Fatima"
     >
 
     <title>API Based Web App | Noor Fatima</title>
 
-    <!-- IMPORTANT:
-         These files are in the SAME folder as index.html
-    -->
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
-    <!-- ==============================
-         NAVBAR
-    =============================== -->
+    <div class="background-grid"></div>
+
+
+    <!-- NAVBAR -->
 
     <header class="navbar">
 
-        <div class="logo">
+        <a
+            href="../index.html"
+            class="logo"
+        >
             NOOR<span>.</span>
-        </div>
+        </a>
 
-        <a href="../index.html" class="back-link">
+
+        <a
+            href="../index.html"
+            class="back-link"
+        >
             ← Back to Portfolio
         </a>
 
     </header>
 
 
-    <!-- ==============================
-         MAIN CONTENT
-    =============================== -->
+    <!-- MAIN -->
 
     <main>
 
-        <section class="hero">
+        <section class="app-section">
 
-            <p class="hero-label">
-                JAVASCRIPT • API • JSON
-            </p>
-
-            <h1>
-                API Based <span>Web App</span>
-            </h1>
-
-            <p class="hero-description">
-                Search for a country and view information
-                fetched from a public API.
-            </p>
+            <div class="app-container">
 
 
-            <!-- SEARCH -->
-
-            <div class="search-box">
-
-                <input
-                    type="text"
-                    id="countryInput"
-                    placeholder="Enter country name..."
-                    autocomplete="off"
-                >
-
-                <button
-                    id="searchBtn"
-                    type="button"
-                >
-                    Search
-                </button>
-
-            </div>
+                <p class="section-label">
+                    JAVASCRIPT • API • JSON
+                </p>
 
 
-            <!-- STATUS MESSAGE -->
-
-            <p id="message" class="message">
-                Search for a country to get started.
-            </p>
+                <h1>
+                    API Based <span>Web App</span>
+                </h1>
 
 
-            <!-- ==============================
-                 COUNTRY CARD
-            =============================== -->
+                <p class="description">
+                    Search for a country and view information
+                    fetched from a public API.
+                </p>
 
-            <div
-                id="countryCard"
-                class="country-card"
-            >
 
-                <div class="country-flag">
-                    🌍
+                <!-- SEARCH -->
+
+                <div class="search-box">
+
+                    <input
+                        type="text"
+                        id="countryInput"
+                        placeholder="Enter country name..."
+                        autocomplete="off"
+                    >
+
+
+                    <button
+                        id="searchButton"
+                        type="button"
+                    >
+                        Search
+                    </button>
+
                 </div>
 
 
-                <h2 id="countryName">
-                    Search a Country
-                </h2>
+                <!-- MESSAGE -->
+
+                <p id="message"></p>
 
 
-                <div class="country-info">
+                <!-- COUNTRY CARD -->
 
-                    <div class="info-item">
+                <div
+                    id="countryCard"
+                    class="country-card"
+                >
 
-                        <span>
-                            Capital
-                        </span>
-
-                        <strong id="capital">
-                            —
-                        </strong>
-
+                    <div class="country-flag">
+                        🌍
                     </div>
 
 
-                    <div class="info-item">
-
-                        <span>
-                            Region
-                        </span>
-
-                        <strong id="region">
-                            —
-                        </strong>
-
-                    </div>
+                    <h2>
+                        Search a country
+                    </h2>
 
 
-                    <div class="info-item">
-
-                        <span>
-                            Population
-                        </span>
-
-                        <strong id="population">
-                            —
-                        </strong>
-
-                    </div>
+                    <div class="country-info">
 
 
-                    <div class="info-item">
+                        <p>
 
-                        <span>
-                            Currency
-                        </span>
+                            <strong>
+                                CAPITAL
+                            </strong>
 
-                        <strong id="currency">
-                            —
-                        </strong>
+                            <span>
+                                —
+                            </span>
+
+                        </p>
+
+
+                        <p>
+
+                            <strong>
+                                REGION
+                            </strong>
+
+                            <span>
+                                —
+                            </span>
+
+                        </p>
+
+
+                        <p>
+
+                            <strong>
+                                POPULATION
+                            </strong>
+
+                            <span>
+                                —
+                            </span>
+
+                        </p>
+
+
+                        <p>
+
+                            <strong>
+                                CURRENCY
+                            </strong>
+
+                            <span>
+                                —
+                            </span>
+
+                        </p>
+
+
+                        <p>
+
+                            <strong>
+                                LANGUAGE
+                            </strong>
+
+                            <span>
+                                —
+                            </span>
+
+                        </p>
+
 
                     </div>
 
@@ -170,21 +198,30 @@
     </main>
 
 
-    <!-- ==============================
-         FOOTER
-    =============================== -->
+    <!-- FOOTER -->
 
     <footer>
 
+        <div class="footer-logo">
+            NOOR<span>.</span>
+        </div>
+
+
         <p>
-            © 2026 Noor Fatima. All Rights Reserved.
+            API Based Web Application
         </p>
+
+
+        <small>
+            © 2026 Noor Fatima
+        </small>
 
     </footer>
 
 
     <!-- IMPORTANT:
-         script.js is in the SAME folder as index.html
+         script.js is in the SAME folder
+         as index.html
     -->
 
     <script src="script.js"></script>
@@ -192,4 +229,3 @@
 </body>
 
 </html>
-```
