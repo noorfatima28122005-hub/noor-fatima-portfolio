@@ -1,10 +1,6 @@
-```javascript
 const countryInput = document.getElementById("countryInput");
-const searchButton = document.getElementById("searchBtn");
-
+const searchButton = document.getElementById("searchButton");
 const message = document.getElementById("message");
-
-const countryCard = document.getElementById("countryCard");
 
 const countryName = document.getElementById("countryName");
 const capital = document.getElementById("capital");
@@ -20,12 +16,12 @@ async function searchCountry() {
 
     const country = countryInput.value.trim();
 
-    // Check empty input
+    // Empty input
     if (country === "") {
 
         message.textContent = "Please enter a country name.";
 
-        countryName.textContent = "Search a country";
+        countryName.textContent = "Search a Country";
         capital.textContent = "—";
         region.textContent = "—";
         population.textContent = "—";
@@ -37,7 +33,7 @@ async function searchCountry() {
     }
 
 
-    // Loading message
+    // Loading
     message.textContent = "Loading country information...";
 
     searchButton.disabled = true;
@@ -51,7 +47,6 @@ async function searchCountry() {
         );
 
 
-        // Country not found
         if (!response.ok) {
             throw new Error("Country not found");
         }
@@ -59,8 +54,6 @@ async function searchCountry() {
 
         const data = await response.json();
 
-
-        // Get first matching country
         const countryData = data[0];
 
 
@@ -105,34 +98,38 @@ async function searchCountry() {
 
                 currency.textContent =
                     currencyData.name +
-                    (currencyData.symbol
-                        ? ` (${currencyData.symbol})`
-                        : "");
+                    (
+                        currencyData.symbol
+                            ? ` (${currencyData.symbol})`
+                            : ""
+                    );
 
             } else {
 
                 currency.textContent = "N/A";
+
             }
 
         } else {
 
             currency.textContent = "N/A";
+
         }
 
 
-        // Success message
+        // Success
         message.textContent =
             "Country information loaded successfully.";
 
+    }
 
-    } catch (error) {
+
+    catch (error) {
 
         console.error(error);
 
-
         message.textContent =
             "Country not found. Please check the spelling and try again.";
-
 
         countryName.textContent = "Sorry!";
 
@@ -151,26 +148,21 @@ async function searchCountry() {
 }
 
 
-
-// Search button click
+// Search button
 searchButton.addEventListener(
     "click",
     searchCountry
 );
 
 
-
-// Press Enter to search
+// Enter key
 countryInput.addEventListener(
     "keydown",
     function (event) {
 
         if (event.key === "Enter") {
-
             searchCountry();
-
         }
 
     }
 );
-```
