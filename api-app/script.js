@@ -1,17 +1,23 @@
 const countryInput = document.getElementById("countryInput");
 const searchButton = document.getElementById("searchButton");
-
 const message = document.getElementById("message");
 
-const countryName = document.getElementById("countryName");
-const capital = document.getElementById("capital");
-const region = document.getElementById("region");
-const population = document.getElementById("population");
-const currency = document.getElementById("currency");
+const countryCard = document.getElementById("countryCard");
+const countryFlag = countryCard.querySelector(".country-flag");
 
-const countryFlag = document.querySelector(".country-flag");
+const countryName = countryCard.querySelector("h2");
 
+const infoItems = countryCard.querySelectorAll(".country-info p");
+
+const capital = infoItems[0].querySelector("span");
+const region = infoItems[1].querySelector("span");
+const population = infoItems[2].querySelector("span");
+const currency = infoItems[3].querySelector("span");
+const language = infoItems[4].querySelector("span");
+
+// Your REST Countries API key
 const API_KEY = "rc_live_9a912b4b31804010a72182fbb3572592";
+
 
 async function searchCountry() {
 
@@ -56,52 +62,94 @@ async function searchCountry() {
 
         const data = countries[0];
 
+
+        // Country name
         countryName.textContent =
             data.names?.common || "Unknown";
 
+
+        // Flag
         countryFlag.textContent =
             data.flag?.emoji || "🌍";
 
+
+        // Capital
         capital.textContent =
             data.capitals?.[0] || "N/A";
 
+
+        // Region
         region.textContent =
             data.region || "N/A";
 
+
+        // Population
         population.textContent =
             data.population
-                ? data.population.toLocaleString()
+                ? Number(data.population).toLocaleString()
                 : "N/A";
 
+
+        // Currency
         if (data.currencies) {
 
             const currencyList =
                 Object.values(data.currencies);
 
-            currency.textContent =
-                currencyList[0]?.name || "N/A";
+            if (currencyList.length > 0) {
+
+                const currencyData = currencyList[0];
+
+                currency.textContent =
+                    currencyData.name || "N/A";
+
+            } else {
+
+                currency.textContent = "N/A";
+            }
 
         } else {
 
             currency.textContent = "N/A";
         }
 
+
+        // Language
+        if (data.languages) {
+
+            const languageList =
+                Object.values(data.languages);
+
+            language.textContent =
+                languageList.length > 0
+                    ? languageList.join(", ")
+                    : "N/A";
+
+        } else {
+
+            language.textContent = "N/A";
+        }
+
+
         message.textContent =
             "Country information loaded successfully.";
+
 
     } catch (error) {
 
         console.error("API Error:", error);
 
         message.textContent =
-            error.message || "Something went wrong.";
+            error.message || "Country not found. Please try again.";
 
         countryName.textContent = "Sorry!";
+        countryFlag.textContent = "🌍";
+
         capital.textContent = "—";
         region.textContent = "—";
         population.textContent = "—";
         currency.textContent = "—";
-        countryFlag.textContent = "🌍";
+        language.textContent = "—";
 
     } finally {
 
@@ -111,12 +159,22 @@ async function searchCountry() {
     }
 }
 
-searchButton.addEventListener("click", searchCountry);
 
-countryInput.addEventListener("keydown", function(event) {
+// Search button
+searchButton.addEventListener(
+    "click",
+    searchCountry
+);
 
-    if (event.key === "Enter") {
-        searchCountry();
+
+// Press Enter
+countryInput.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (event.key === "Enter") {
+            searchCountry();
+        }
+
     }
-
-});
+);
