@@ -1,4 +1,4 @@
-=const searchInput = document.getElementById("countryInput");
+const searchInput = document.getElementById("countryInput");
 const searchButton = document.getElementById("searchButton");
 const message = document.getElementById("message");
 const countryCard = document.getElementById("countryCard");
@@ -16,40 +16,6 @@ async function searchCountry() {
 
     if (!countryName) {
         message.textContent = "Please enter a country name.";
-
-        countryCard.innerHTML = `
-            <div class="country-flag">🌍</div>
-
-            <h2>Search a country</h2>
-
-            <div class="country-info">
-                <p>
-                    <strong>CAPITAL</strong>
-                    <span>—</span>
-                </p>
-
-                <p>
-                    <strong>REGION</strong>
-                    <span>—</span>
-                </p>
-
-                <p>
-                    <strong>POPULATION</strong>
-                    <span>—</span>
-                </p>
-
-                <p>
-                    <strong>CURRENCY</strong>
-                    <span>—</span>
-                </p>
-
-                <p>
-                    <strong>LANGUAGE</strong>
-                    <span>—</span>
-                </p>
-            </div>
-        `;
-
         return;
     }
 
@@ -61,10 +27,12 @@ async function searchCountry() {
     `;
 
     try {
-        const url =
-            `https://api.restcountries.com/countries/v5/name?q=${encodeURIComponent(countryName)}`;
+        const apiUrl =
+            "https://api.restcountries.com/countries/v5/name?q=" +
+            encodeURIComponent(countryName);
 
-        const response = await fetch(url, {
+        const response = await fetch(apiUrl, {
+            method: "GET",
             headers: {
                 "Authorization": "Bearer rc_live_demo"
             }
@@ -76,7 +44,7 @@ async function searchCountry() {
 
         const result = await response.json();
 
-        const countries = result?.data?.objects;
+        const countries = result.data?.objects;
 
         if (!countries || countries.length === 0) {
             throw new Error("Country not found");
@@ -97,36 +65,41 @@ async function searchCountry() {
             country.region || "N/A";
 
         const population =
-            typeof country.population === "number"
+            country.population
                 ? country.population.toLocaleString()
                 : "N/A";
 
         let currency = "N/A";
 
         if (country.currencies) {
-            const currencyList = Object.values(country.currencies);
+            const currencies =
+                Object.values(country.currencies);
 
-            if (currencyList.length > 0) {
+            if (currencies.length > 0) {
                 currency =
-                    currencyList[0]?.name ||
-                    currencyList[0]?.common_name ||
+                    currencies[0].name ||
+                    currencies[0].common_name ||
                     "N/A";
             }
         }
 
         let language = "N/A";
 
-        if (Array.isArray(country.languages)) {
-            if (country.languages.length > 0) {
+        if (country.languages) {
+            const languages =
+                Object.values(country.languages);
+
+            if (languages.length > 0) {
                 language =
-                    country.languages[0]?.name ||
-                    country.languages[0]?.english_name ||
-                    country.languages[0]?.native_name ||
+                    languages[0].name ||
+                    languages[0].english_name ||
+                    languages[0].native_name ||
                     "N/A";
             }
         }
 
-        message.textContent = "Country found successfully!";
+        message.textContent =
+            "Country found successfully!";
 
         countryCard.innerHTML = `
             <div class="country-flag">
@@ -166,9 +139,10 @@ async function searchCountry() {
         `;
 
     } catch (error) {
-        console.error("API Error:", error);
+        console.error(error);
 
-        message.textContent = "Country not found.";
+        message.textContent =
+            "Country not found.";
 
         countryCard.innerHTML = `
             <div class="country-flag">
