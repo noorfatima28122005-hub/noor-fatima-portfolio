@@ -1,50 +1,74 @@
-const countryInput = document.getElementById("countryInput");
+const searchInput = document.getElementById("countryInput");
 const searchButton = document.getElementById("searchButton");
 const message = document.getElementById("message");
+const countryCard = document.getElementById("countryCard");
 
-const countryName = document.getElementById("countryName");
-const capital = document.getElementById("capital");
-const region = document.getElementById("region");
-const population = document.getElementById("population");
-const currency = document.getElementById("currency");
 
-const countryFlag = document.querySelector(".country-flag");
+// Fetch with timeout
+async function fetchWithTimeout(url, timeout = 10000) {
+
+    const controller = new AbortController();
+
+    const timer = setTimeout(() => {
+        controller.abort();
+    }, timeout);
+
+    try {
+
+        const response = await fetch(url, {
+            signal: controller.signal
+        });
+
+        return response;
+
+    } finally {
+
+        clearTimeout(timer);
+
+    }
+}
 
 
 // Search country
 async function searchCountry() {
 
-    const country = countryInput.value.trim();
+    const countryName = searchInput.value.trim();
 
-    // Empty input
-    if (country === "") {
+    if (!countryName) {
 
         message.textContent = "Please enter a country name.";
 
-        countryName.textContent = "Search a Country";
-        capital.textContent = "—";
-        region.textContent = "—";
-        population.textContent = "—";
-        currency.textContent = "—";
-
-        countryFlag.textContent = "🌍";
+        countryCard.innerHTML = `
+            <div class="country-flag">🌍</div>
+            <h2>Search a country</h2>
+            <p>Enter a country name to get information.</p>
+        `;
 
         return;
     }
 
 
     // Loading
-    message.textContent = "Loading country information...";
+    message.textContent = "Searching...";
 
     searchButton.disabled = true;
     searchButton.textContent = "Searching...";
 
 
+    countryCard.innerHTML = `
+        <div class="country-flag">🔎</div>
+        <h2>Searching...</h2>
+        <p>Please wait...</p>
+    `;
+
+
     try {
 
-        const response = await fetch(
-            `https://restcountries.com/v3.1/name/${encodeURIComponent(country)}`
-        );
+        // REST Countries API
+        const url =
+            `https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}?fields=name,capital,region,population,currencies,languages,flags`;
+
+        const response = await fetchWithTimeout(url, 10000);
 
 
         if (!response.ok) {
@@ -54,97 +78,136 @@ async function searchCountry() {
 
         const data = await response.json();
 
-        const countryData = data[0];
+
+        if (!data || data.length === 0) {
+            throw new Error("Country not found");
+        }
 
 
-        // Country name
-        countryName.textContent =
-            countryData.name.common || "Unknown";
+        const country = data[0];
 
 
-        // Flag
-        countryFlag.textContent =
-            countryData.flag || "🌍";
+        const name =
+            country.name?.common || "N/A";
 
 
-        // Capital
-        capital.textContent =
-            countryData.capital
-                ? countryData.capital[0]
+        const capital =
+            country.capital?.[0] || "N/A";
+
+
+        const region =
+            country.region || "N/A";
+
+
+        const population =
+            country.population
+                ? country.population.toLocaleString()
                 : "N/A";
 
 
-        // Region
-        region.textContent =
-            countryData.region || "N/A";
-
-
-        // Population
-        population.textContent =
-            countryData.population
-                ? countryData.population.toLocaleString()
+        const currency =
+            country.currencies
+                ? Object.values(country.currencies)[0]?.name || "N/A"
                 : "N/A";
 
 
-        // Currency
-        if (countryData.currencies) {
+        const language =
+            country.languages
+                ? Object.values(country.languages)[0] || "N/A"
+                : "N/A";
 
-            const currencyList =
-                Object.values(countryData.currencies);
 
-            if (currencyList.length > 0) {
+        const flag =
+            country.flags?.svg
+                ? `<img src="${country.flags.svg}" alt="${name} flag" class="flag-image">`
+                : "🌍";
 
-                const currencyData = currencyList[0];
 
-                currency.textContent =
-                    currencyData.name +
-                    (
-                        currencyData.symbol
-                            ? ` (${currencyData.symbol})`
-                            : ""
-                    );
+        // Display result
+        countryCard.innerHTML = `
 
-            } else {
+            <div class="country-flag">
+                ${flag}
+            </div>
 
-                currency.textContent = "N/A";
+            <h2>${name}</h2>
 
-            }
+            <div class="country-info">
+
+                <p>
+                    <strong>CAPITAL</strong>
+                    <span>${capital}</span>
+                </p>
+
+                <p>
+                    <strong>REGION</strong>
+                    <span>${region}</span>
+                </p>
+
+                <p>
+                    <strong>POPULATION</strong>
+                    <span>${population}</span>
+                </p>
+
+                <p>
+                    <strong>CURRENCY</strong>
+                    <span>${currency}</span>
+                </p>
+
+                <p>
+                    <strong>LANGUAGE</strong>
+                    <span>${language}</span>
+                </p>
+
+            </div>
+
+        `;
+
+
+        message.textContent =
+            "Country information loaded successfully.";
+
+
+    } catch (error) {
+
+        console.error("API Error:", error);
+
+
+        if (error.name === "AbortError") {
+
+            message.textContent =
+                "The API is taking too long to respond. Please try again.";
 
         } else {
 
-            currency.textContent = "N/A";
+            message.textContent =
+                "Country not found. Please check the spelling and try again.";
 
         }
 
 
-        // Success
-        message.textContent =
-            "Country information loaded successfully.";
+        countryCard.innerHTML = `
+
+            <div class="country-flag">
+                🌍
+            </div>
+
+            <h2>Sorry!</h2>
+
+            <p class="description">
+                We could not find that country.
+                Please check the spelling and try again.
+            </p>
+
+        `;
+
+    } finally {
+
+        searchButton.disabled = false;
+        searchButton.textContent = "Search";
 
     }
 
-
-    catch (error) {
-
-        console.error(error);
-
-        message.textContent =
-            "Country not found. Please check the spelling and try again.";
-
-        countryName.textContent = "Sorry!";
-
-        capital.textContent = "—";
-        region.textContent = "—";
-        population.textContent = "—";
-        currency.textContent = "—";
-
-        countryFlag.textContent = "🌍";
-    }
-
-
-    // Restore button
-    searchButton.disabled = false;
-    searchButton.textContent = "Search";
 }
 
 
@@ -155,13 +218,15 @@ searchButton.addEventListener(
 );
 
 
-// Enter key
-countryInput.addEventListener(
+// Press Enter
+searchInput.addEventListener(
     "keydown",
     function (event) {
 
         if (event.key === "Enter") {
+
             searchCountry();
+
         }
 
     }
