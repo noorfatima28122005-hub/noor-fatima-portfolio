@@ -12,7 +12,6 @@ searchInput.addEventListener("keydown", function (event) {
 });
 
 async function searchCountry() {
-
     const countryName = searchInput.value.trim();
 
     if (!countryName) {
@@ -28,44 +27,71 @@ async function searchCountry() {
     `;
 
     try {
-
         const response = await fetch(
-            `https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}`
+            `https://api.restcountries.com/countries/v5/name?q=${encodeURIComponent(countryName)}`,
+            {
+                headers: {
+                    "Authorization": "Bearer rc_live_demo"
+                }
+            }
         );
 
         if (!response.ok) {
             throw new Error("Country not found");
         }
 
-        const data = await response.json();
+        const result = await response.json();
 
-        if (!data || data.length === 0) {
+        const countries = result?.data?.objects;
+
+        if (!countries || countries.length === 0) {
             throw new Error("Country not found");
         }
 
-        const country = data[0];
+        const country = countries[0];
 
-        const name = country.name?.common || "N/A";
+        const name = country.names?.common || "N/A";
 
-        const flag = country.flag || "🌍";
+        const flag = country.flag?.emoji || "🌍";
 
-        const capital = country.capital?.[0] || "N/A";
+        const capital =
+            country.capitals?.[0]?.name || "N/A";
 
-        const region = country.region || "N/A";
+        const region =
+            country.region || "N/A";
 
-        const population = country.population
-            ? country.population.toLocaleString()
-            : "N/A";
+        const population =
+            country.population
+                ? country.population.toLocaleString()
+                : "N/A";
 
-        const currency = country.currencies
-            ? Object.values(country.currencies)[0]?.name || "N/A"
-            : "N/A";
+        let currency = "N/A";
 
-        const language = country.languages
-            ? Object.values(country.languages)[0] || "N/A"
-            : "N/A";
+        if (country.currencies) {
+            const currencyList = Object.values(
+                country.currencies
+            );
 
-        message.textContent = "Country found successfully!";
+            if (currencyList.length > 0) {
+                currency =
+                    currencyList[0].name || "N/A";
+            }
+        }
+
+        let language = "N/A";
+
+        if (country.languages) {
+            const languageList =
+                Object.values(country.languages);
+
+            if (languageList.length > 0) {
+                language =
+                    languageList[0].name || "N/A";
+            }
+        }
+
+        message.textContent =
+            "Country found successfully!";
 
         countryCard.innerHTML = `
             <div class="country-flag">
@@ -106,7 +132,10 @@ async function searchCountry() {
 
     } catch (error) {
 
-        message.textContent = "Country not found.";
+        console.error(error);
+
+        message.textContent =
+            "Country not found.";
 
         countryCard.innerHTML = `
             <div class="country-flag">
