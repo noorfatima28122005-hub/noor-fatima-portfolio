@@ -20,6 +20,7 @@ async function searchCountry() {
 
         countryCard.innerHTML = `
             <div class="country-flag">🌍</div>
+
             <h2>Search a country</h2>
 
             <div class="country-info">
@@ -63,7 +64,7 @@ async function searchCountry() {
     try {
 
         const response = await fetch(
-            `https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}`
+            `https://countries.dev/name/${encodeURIComponent(countryName)}`
         );
 
         if (!response.ok) {
@@ -78,46 +79,29 @@ async function searchCountry() {
 
         const country = data[0];
 
-        const name =
-            country.name?.common || "N/A";
+        const name = country.name || "N/A";
 
-        const flag =
-            country.flags?.emoji || country.flag || "🌍";
+        const flag = country.flag || "🌍";
 
-        const capital =
-            country.capital?.[0] || "N/A";
+        const capital = country.capital || "N/A";
 
-        const region =
-            country.region || "N/A";
+        const region = country.region || "N/A";
 
-        const population =
-            country.population
-                ? country.population.toLocaleString()
+        const population = country.population
+            ? country.population.toLocaleString()
+            : "N/A";
+
+        const currency =
+            country.currencies &&
+            country.currencies.length > 0
+                ? country.currencies[0].name
                 : "N/A";
 
-        let currency = "N/A";
-
-        if (country.currencies) {
-            const currencyList =
-                Object.values(country.currencies);
-
-            if (currencyList.length > 0) {
-                currency =
-                    currencyList[0].name || "N/A";
-            }
-        }
-
-        let language = "N/A";
-
-        if (country.languages) {
-            const languageList =
-                Object.values(country.languages);
-
-            if (languageList.length > 0) {
-                language =
-                    languageList[0] || "N/A";
-            }
-        }
+        const language =
+            country.languages &&
+            country.languages.length > 0
+                ? country.languages[0].name
+                : "N/A";
 
         message.textContent =
             "Country found successfully!";
@@ -161,10 +145,9 @@ async function searchCountry() {
 
     } catch (error) {
 
-        console.error(error);
+        console.error("API Error:", error);
 
-        message.textContent =
-            "Country not found.";
+        message.textContent = "Country not found.";
 
         countryCard.innerHTML = `
             <div class="country-flag">
