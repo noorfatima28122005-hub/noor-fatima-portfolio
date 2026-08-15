@@ -1,7 +1,6 @@
 ```javascript
 const countryInput = document.getElementById("countryInput");
 const searchButton = document.getElementById("searchBtn");
-
 const message = document.getElementById("message");
 
 const countryName = document.getElementById("countryName");
@@ -12,97 +11,87 @@ const currency = document.getElementById("currency");
 
 const countryFlag = document.querySelector(".country-flag");
 
+
 async function searchCountry() {
 
     const country = countryInput.value.trim();
 
     if (country === "") {
         message.textContent = "Please enter a country name.";
-
-        countryName.textContent = "Search a country";
-        capital.textContent = "—";
-        region.textContent = "—";
-        population.textContent = "—";
-        currency.textContent = "—";
-        countryFlag.textContent = "🌍";
-
         return;
     }
 
-    message.textContent = "Loading country information...";
-
     searchButton.disabled = true;
     searchButton.textContent = "Searching...";
+    message.textContent = "Loading country information...";
 
     try {
 
-        const response = await fetch(
-            `https://api.restcountries.com/countries/v5/name?q=${encodeURIComponent(country)}`,
-            {
-                headers: {
-                    "Authorization": "Bearer rc_live_demo"
-                }
-            }
-        );
+        const url =
+            `https://api.restcountries.com/countries/v5?q=${encodeURIComponent(country)}&api-key=rc_live_demo`;
 
-        if (!response.ok) {
-            throw new Error("Country not found");
-        }
+        const response = await fetch(url);
 
         const result = await response.json();
 
-        const countryData = result.data.objects[0];
+        console.log(result);
 
-        if (!countryData) {
+        if (!response.ok || !result.data || !result.data.objects) {
             throw new Error("Country not found");
         }
 
+        const data = result.data.objects[0];
+
+        if (!data) {
+            throw new Error("Country not found");
+        }
+
+
         countryName.textContent =
-            countryData.names?.common || "Unknown";
+            data.names?.common || "N/A";
+
 
         countryFlag.textContent =
-            countryData.flag?.emoji || "🌍";
+            data.flag?.emoji || "🌍";
+
 
         capital.textContent =
-            countryData.capitals?.[0] || "N/A";
+            data.capitals?.[0] || "N/A";
+
 
         region.textContent =
-            countryData.region || "N/A";
+            data.region || "N/A";
+
 
         population.textContent =
-            countryData.population
-                ? countryData.population.toLocaleString()
+            data.population
+                ? data.population.toLocaleString()
                 : "N/A";
 
-        if (countryData.currencies) {
 
-            const currencyList =
-                Object.values(countryData.currencies);
+        if (data.currencies) {
 
-            if (currencyList.length > 0) {
+            const currencies =
+                Object.values(data.currencies);
 
-                const currencyData = currencyList[0];
-
-                currency.textContent =
-                    currencyData.name ||
-                    "N/A";
-
-            } else {
-
-                currency.textContent = "N/A";
-            }
+            currency.textContent =
+                currencies[0]?.name || "N/A";
 
         } else {
 
             currency.textContent = "N/A";
+
         }
+
 
         message.textContent =
             "Country information loaded successfully.";
 
-    } catch (error) {
+    }
 
-        console.error(error);
+    catch (error) {
+
+        console.error("API Error:", error);
 
         message.textContent =
             "Country not found. Please try again.";
@@ -114,22 +103,27 @@ async function searchCountry() {
         currency.textContent = "—";
         countryFlag.textContent = "🌍";
 
-    } finally {
+    }
+
+    finally {
 
         searchButton.disabled = false;
         searchButton.textContent = "Search";
 
     }
+
 }
+
 
 searchButton.addEventListener(
     "click",
     searchCountry
 );
 
+
 countryInput.addEventListener(
     "keydown",
-    function (event) {
+    function(event) {
 
         if (event.key === "Enter") {
             searchCountry();
