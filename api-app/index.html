@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta
@@ -18,15 +17,12 @@
 
     <title>API Based Web App | Noor Fatima</title>
 
-    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
 
     <div class="background-grid"></div>
-
 
     <!-- NAVBAR -->
 
@@ -38,7 +34,6 @@
         >
             NOOR<span>.</span>
         </a>
-
 
         <a
             href="../index.html"
@@ -58,16 +53,13 @@
 
             <div class="app-container">
 
-
                 <p class="section-label">
                     JAVASCRIPT • API • JSON
                 </p>
 
-
                 <h1>
                     API Based <span>Web App</span>
                 </h1>
-
 
                 <p class="description">
                     Search for a country and view information
@@ -86,7 +78,6 @@
                         autocomplete="off"
                     >
 
-
                     <button
                         id="searchButton"
                         type="button"
@@ -99,7 +90,9 @@
 
                 <!-- MESSAGE -->
 
-                <p id="message"></p>
+                <p id="message">
+                    Search for a country to get started.
+                </p>
 
 
                 <!-- COUNTRY CARD -->
@@ -109,12 +102,15 @@
                     class="country-card"
                 >
 
-                    <div class="country-flag">
+                    <div
+                        class="country-flag"
+                        id="countryFlag"
+                    >
                         🌍
                     </div>
 
 
-                    <h2>
+                    <h2 id="countryName">
                         Search a country
                     </h2>
 
@@ -123,67 +119,46 @@
 
 
                         <p>
-
                             <strong>
                                 CAPITAL
                             </strong>
 
-                            <span>
+                            <span id="capital">
                                 —
                             </span>
-
                         </p>
 
 
                         <p>
-
                             <strong>
                                 REGION
                             </strong>
 
-                            <span>
+                            <span id="region">
                                 —
                             </span>
-
                         </p>
 
 
                         <p>
-
                             <strong>
                                 POPULATION
                             </strong>
 
-                            <span>
+                            <span id="population">
                                 —
                             </span>
-
                         </p>
 
 
                         <p>
-
                             <strong>
                                 CURRENCY
                             </strong>
 
-                            <span>
+                            <span id="currency">
                                 —
                             </span>
-
-                        </p>
-
-
-                        <p>
-
-                            <strong>
-                                LANGUAGE
-                            </strong>
-
-                            <span>
-                                —
-                            </span>
-
                         </p>
 
 
@@ -206,11 +181,9 @@
             NOOR<span>.</span>
         </div>
 
-
         <p>
             API Based Web Application
         </p>
-
 
         <small>
             © 2026 Noor Fatima
@@ -218,11 +191,6 @@
 
     </footer>
 
-
-    <!-- IMPORTANT:
-         script.js is in the SAME folder
-         as index.html
-    -->
 
     <script src="script.js"></script>
 
