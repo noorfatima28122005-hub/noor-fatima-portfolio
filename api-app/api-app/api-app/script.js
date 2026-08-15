@@ -4,11 +4,11 @@ const message = document.getElementById("message");
 const countryCard = document.getElementById("countryCard");
 
 
-// Search button click
+// Search button
 searchButton.addEventListener("click", searchCountry);
 
 
-// Enter key
+// Press Enter to search
 searchInput.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
         searchCountry();
@@ -16,13 +16,13 @@ searchInput.addEventListener("keydown", function (event) {
 });
 
 
-// Search country function
+// Search Country
 async function searchCountry() {
 
     const countryName = searchInput.value.trim();
 
 
-    // Empty input
+    // Check empty input
     if (!countryName) {
 
         message.textContent = "Please enter a country name.";
@@ -66,7 +66,7 @@ async function searchCountry() {
     }
 
 
-    // Searching message
+    // Show searching message
     message.textContent = "Searching...";
 
     countryCard.innerHTML = `
@@ -77,19 +77,19 @@ async function searchCountry() {
 
     try {
 
-        // API
+        // Countries API
         const response = await fetch(
             `https://countries.dev/name/${encodeURIComponent(countryName)}`
         );
 
 
-        // Check API response
+        // Check response
         if (!response.ok) {
             throw new Error("Country not found");
         }
 
 
-        // Convert API response to JSON
+        // Convert response to JSON
         const data = await response.json();
 
 
@@ -103,34 +103,29 @@ async function searchCountry() {
         const country = data[0];
 
 
-        // Get country name
-        const name =
-            country.name || "N/A";
+        // Country name
+        const name = country.name || "N/A";
 
 
-        // Get flag
-        const flag =
-            country.flag || "🌍";
+        // Country flag
+        const flag = country.flag || "🌍";
 
 
-        // Get capital
-        const capital =
-            country.capital || "N/A";
+        // Capital
+        const capital = country.capital || "N/A";
 
 
-        // Get region
-        const region =
-            country.region || "N/A";
+        // Region
+        const region = country.region || "N/A";
 
 
-        // Get population
-        const population =
-            country.population
-                ? Number(country.population).toLocaleString()
-                : "N/A";
+        // Population
+        const population = country.population
+            ? Number(country.population).toLocaleString()
+            : "N/A";
 
 
-        // Get currency
+        // Currency
         let currency = "N/A";
 
         if (country.currencies) {
@@ -151,7 +146,7 @@ async function searchCountry() {
         }
 
 
-        // Get language
+        // Language
         let language = "N/A";
 
         if (country.languages) {
@@ -177,7 +172,7 @@ async function searchCountry() {
             "Country found successfully!";
 
 
-        // Show country information
+        // Display country information
         countryCard.innerHTML = `
 
             <div class="country-flag">
@@ -219,7 +214,7 @@ async function searchCountry() {
     }
 
 
-    // Error
+    // If something goes wrong
     catch (error) {
 
         console.error("API Error:", error);
