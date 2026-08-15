@@ -11,10 +11,7 @@ const currency = document.getElementById("currency");
 
 const countryFlag = document.querySelector(".country-flag");
 
-
-// REST Countries API
-const API_URL = "https://api.restcountries.com/countries/v5";
-
+const API_KEY = "rc_live_9a912b4b31804010a72182fbb3572592";
 
 async function searchCountry() {
 
@@ -32,10 +29,11 @@ async function searchCountry() {
     try {
 
         const response = await fetch(
-            `${API_URL}?q=${encodeURIComponent(country)}&limit=10`,
+            `https://api.restcountries.com/countries/v5?q=${encodeURIComponent(country)}`,
             {
+                method: "GET",
                 headers: {
-                    "Authorization": "Bearer rc_live_demo"
+                    "Authorization": `Bearer ${API_KEY}`
                 }
             }
         );
@@ -46,7 +44,7 @@ async function searchCountry() {
 
         if (!response.ok) {
             throw new Error(
-                result.errors?.[0]?.message || "API request failed"
+                result.message || "API request failed"
             );
         }
 
@@ -58,72 +56,45 @@ async function searchCountry() {
 
         const data = countries[0];
 
-
-        // Country name
         countryName.textContent =
             data.names?.common || "Unknown";
 
-
-        // Flag
         countryFlag.textContent =
             data.flag?.emoji || "🌍";
 
-
-        // Capital
         capital.textContent =
-            data.capitals?.[0]?.name || "N/A";
+            data.capitals?.[0] || "N/A";
 
-
-        // Region
         region.textContent =
             data.region || "N/A";
 
-
-        // Population
         population.textContent =
             data.population
                 ? data.population.toLocaleString()
                 : "N/A";
 
-
-        // Currency
         if (data.currencies) {
 
             const currencyList =
                 Object.values(data.currencies);
 
-            if (currencyList.length > 0) {
-
-                const currencyData = currencyList[0];
-
-                currency.textContent =
-                    currencyData.name ||
-                    "N/A";
-
-            } else {
-
-                currency.textContent = "N/A";
-
-            }
+            currency.textContent =
+                currencyList[0]?.name || "N/A";
 
         } else {
 
             currency.textContent = "N/A";
-
         }
 
-
-        // Success
         message.textContent =
             "Country information loaded successfully.";
-
 
     } catch (error) {
 
         console.error("API Error:", error);
 
         message.textContent =
-            "Country not found. Please try again.";
+            error.message || "Something went wrong.";
 
         countryName.textContent = "Sorry!";
         capital.textContent = "—";
@@ -140,22 +111,12 @@ async function searchCountry() {
     }
 }
 
+searchButton.addEventListener("click", searchCountry);
 
-// Search button
-searchButton.addEventListener(
-    "click",
-    searchCountry
-);
+countryInput.addEventListener("keydown", function(event) {
 
-
-// Enter key
-countryInput.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (event.key === "Enter") {
-            searchCountry();
-        }
-
+    if (event.key === "Enter") {
+        searchCountry();
     }
-);
+
+});
