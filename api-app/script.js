@@ -36,16 +36,19 @@ async function searchCountry() {
         }
 
         const data = await response.json();
+
         const countryData = data[0];
 
         countryName.textContent =
-            countryData.name.common || "Unknown";
+            countryData.name.common;
 
         countryFlag.textContent =
             countryData.flag || "🌍";
 
         capital.textContent =
-            countryData.capital?.[0] || "N/A";
+            countryData.capital
+                ? countryData.capital[0]
+                : "N/A";
 
         region.textContent =
             countryData.region || "N/A";
@@ -57,15 +60,16 @@ async function searchCountry() {
 
         if (countryData.currencies) {
 
-            const currencyList =
+            const currencies =
                 Object.values(countryData.currencies);
 
             currency.textContent =
-                currencyList[0]?.name || "N/A";
+                currencies[0].name || "N/A";
 
         } else {
 
             currency.textContent = "N/A";
+
         }
 
         message.textContent =
@@ -73,10 +77,10 @@ async function searchCountry() {
 
     } catch (error) {
 
-        console.error(error);
+        console.error("Error:", error);
 
         message.textContent =
-            "Country not found. Please check the spelling and try again.";
+            "Country not found. Please try again.";
 
         countryName.textContent = "Sorry!";
         capital.textContent = "—";
@@ -100,7 +104,9 @@ searchButton.addEventListener("click", searchCountry);
 countryInput.addEventListener("keydown", function(event) {
 
     if (event.key === "Enter") {
+
         searchCountry();
+
     }
 
 });
