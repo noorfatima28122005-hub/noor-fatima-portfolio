@@ -1,130 +1,193 @@
-<script>
-const searchInput = document.getElementById("countryInput");
-const searchButton = document.getElementById("searchButton");
-const message = document.getElementById("message");
-const countryCard = document.getElementById("countryCard");
+<!DOCTYPE html>
+<html lang="en">
 
-searchButton.addEventListener("click", searchCountry);
+<head>
 
-searchInput.addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-        searchCountry();
-    }
-});
+    <meta charset="UTF-8">
 
-async function searchCountry() {
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    const countryName = searchInput.value.trim();
+    <meta
+        name="description"
+        content="Noor Fatima - API Based Web Application"
+    >
 
-    if (!countryName) {
-        message.textContent = "Please enter a country name.";
-        return;
-    }
+    <meta
+        name="author"
+        content="Noor Fatima"
+    >
 
-    message.textContent = "Searching...";
+    <title>API Based Web App | Noor Fatima</title>
 
-    countryCard.innerHTML = `
-        <div class="country-flag">🔎</div>
-        <h2>Searching...</h2>
-    `;
 
-    try {
+    <!-- CSS -->
+    <link
+        rel="stylesheet"
+        href="api-app/style.css"
+    >
 
-        const response = await fetch(
-            "https://countries.dev/name/" +
-            encodeURIComponent(countryName)
-        );
+</head>
 
-        if (!response.ok) {
-            throw new Error("Country not found");
-        }
 
-        const data = await response.json();
+<body>
 
-        if (!data || !Array.isArray(data) || data.length === 0) {
-            throw new Error("Country not found");
-        }
+    <!-- Background -->
+    <div class="background-grid"></div>
 
-        const country = data[0];
 
-        const name = country.name || "N/A";
-        const flag = country.flag || "🌍";
-        const capital = country.capital || "N/A";
-        const region = country.region || "N/A";
+    <!-- NAVBAR -->
+    <header class="navbar">
 
-        const population = country.population
-            ? country.population.toLocaleString()
-            : "N/A";
+        <a
+            href="../index.html"
+            class="logo"
+        >
+            NOOR<span>.</span>
+        </a>
 
-        const currency =
-            country.currencies &&
-            country.currencies.length > 0
-                ? country.currencies[0].name
-                : "N/A";
 
-        const language =
-            country.languages &&
-            country.languages.length > 0
-                ? country.languages[0].name
-                : "N/A";
+        <a
+            href="../index.html"
+            class="back-link"
+        >
+            ← Back to Portfolio
+        </a>
 
-        message.textContent = "Country found successfully!";
+    </header>
 
-        countryCard.innerHTML = `
-            <div class="country-flag">
-                ${flag}
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+        <section class="app-section">
+
+            <div class="app-container">
+
+                <p class="section-label">
+                    JAVASCRIPT • API • JSON
+                </p>
+
+
+                <h1>
+                    API Based
+                    <span>Web App</span>
+                </h1>
+
+
+                <p class="description">
+                    Search for a country and view information
+                    fetched from a public API.
+                </p>
+
+
+                <!-- SEARCH BOX -->
+                <div class="search-box">
+
+                    <input
+                        type="text"
+                        id="countryInput"
+                        placeholder="Enter country name..."
+                        autocomplete="off"
+                    >
+
+                    <button
+                        id="searchButton"
+                        type="button"
+                    >
+                        Search
+                    </button>
+
+                </div>
+
+
+                <!-- MESSAGE -->
+                <p id="message"></p>
+
+
+                <!-- COUNTRY CARD -->
+                <div
+                    id="countryCard"
+                    class="country-card"
+                >
+
+                    <div class="country-flag">
+                        🌍
+                    </div>
+
+
+                    <h2>
+                        Search a country
+                    </h2>
+
+
+                    <div class="country-info">
+
+                        <p>
+                            <strong>CAPITAL</strong>
+                            <span>—</span>
+                        </p>
+
+
+                        <p>
+                            <strong>REGION</strong>
+                            <span>—</span>
+                        </p>
+
+
+                        <p>
+                            <strong>POPULATION</strong>
+                            <span>—</span>
+                        </p>
+
+
+                        <p>
+                            <strong>CURRENCY</strong>
+                            <span>—</span>
+                        </p>
+
+
+                        <p>
+                            <strong>LANGUAGE</strong>
+                            <span>—</span>
+                        </p>
+
+                    </div>
+
+                </div>
+
             </div>
 
-            <h2>${name}</h2>
+        </section>
 
-            <div class="country-info">
+    </main>
 
-                <p>
-                    <strong>CAPITAL</strong>
-                    <span>${capital}</span>
-                </p>
 
-                <p>
-                    <strong>REGION</strong>
-                    <span>${region}</span>
-                </p>
+    <!-- FOOTER -->
+    <footer>
 
-                <p>
-                    <strong>POPULATION</strong>
-                    <span>${population}</span>
-                </p>
+        <div class="footer-logo">
+            NOOR<span>.</span>
+        </div>
 
-                <p>
-                    <strong>CURRENCY</strong>
-                    <span>${currency}</span>
-                </p>
 
-                <p>
-                    <strong>LANGUAGE</strong>
-                    <span>${language}</span>
-                </p>
+        <p>
+            API Based Web Application
+        </p>
 
-            </div>
-        `;
 
-    } catch (error) {
+        <small>
+            © 2026 Noor Fatima
+        </small>
 
-        console.error(error);
+    </footer>
 
-        message.textContent = "Country not found.";
 
-        countryCard.innerHTML = `
-            <div class="country-flag">
-                🌍
-            </div>
+    <!-- JAVASCRIPT -->
+    <script src="api-app/api-app/script.js"></script>
 
-            <h2>Sorry!</h2>
+</body>
 
-            <p class="description">
-                We could not find that country.
-                Please check the spelling and try again.
-            </p>
-        `;
-    }
-}
-</script>
+</html>
