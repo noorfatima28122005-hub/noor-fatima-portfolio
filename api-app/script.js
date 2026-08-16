@@ -10,13 +10,14 @@ const population = document.getElementById("population");
 const currency = document.getElementById("currency");
 const language = document.getElementById("language");
 
+// REST Countries API Key
 const API_KEY = "rc_live_9a912b4b31804010a72182fbb3572592";
 
 async function searchCountry() {
 
     const country = countryInput.value.trim();
 
-    if (country === "") {
+    if (!country) {
         message.textContent = "Please enter a country name.";
         return;
     }
@@ -27,18 +28,17 @@ async function searchCountry() {
 
     try {
 
-        const url =
-            `https://api.restcountries.com/countries/v5?q=${encodeURIComponent(country)}`;
-
-        const response = await fetch(url, {
-            headers: {
-                "Authorization": `Bearer ${API_KEY}`
+        const response = await fetch(
+            `https://api.restcountries.com/countries/v5?q=${encodeURIComponent(country)}`,
+            {
+                headers: {
+                    "Authorization": `Bearer ${API_KEY}`,
+                    "Accept": "application/json"
+                }
             }
-        });
+        );
 
         const result = await response.json();
-
-        console.log("API Response:", result);
 
         if (!response.ok) {
             throw new Error(
@@ -48,15 +48,15 @@ async function searchCountry() {
             );
         }
 
-        const countries = result.data?.objects;
+        const countries = result.data?.objects || [];
 
-        if (!countries || countries.length === 0) {
+        if (countries.length === 0) {
             throw new Error("Country not found.");
         }
 
         const data = countries[0];
 
-        // Country name
+        // Country Name
         countryName.textContent =
             data.names?.common || "Unknown";
 
@@ -64,11 +64,11 @@ async function searchCountry() {
         countryFlag.textContent =
             data.flag?.emoji || "🌍";
 
-        // Capital
-        countryData = data;
-
+        // Capital (FIXED)
         capital.textContent =
-            data.capitals?.[0] || "N/A";
+            data.capitals?.[0]?.name ||
+            data.capitals?.[0] ||
+            "N/A";
 
         // Region
         region.textContent =
@@ -81,28 +81,26 @@ async function searchCountry() {
                 : "N/A";
 
         // Currency
-        const currencies =
-            data.currencies
-                ? Object.values(data.currencies)
-                : [];
+        const currencies = data.currencies
+            ? Object.values(data.currencies)
+            : [];
 
         currency.textContent =
             currencies.length
                 ? currencies[0].name +
                   (currencies[0].symbol
-                    ? ` (${currencies[0].symbol})`
-                    : "")
+                      ? ` (${currencies[0].symbol})`
+                      : "")
                 : "N/A";
 
-        // Language
-        const languages =
-            data.languages
-                ? Object.values(data.languages)
-                : [];
+        // Language (FIXED)
+        const languages = data.languages
+            ? Object.values(data.languages)
+            : [];
 
         language.textContent =
             languages.length
-                ? languages.join(", ")
+                ? languages.map(lang => lang.name || lang).join(", ")
                 : "N/A";
 
         message.textContent =
@@ -129,14 +127,13 @@ async function searchCountry() {
         searchButton.textContent = "Search";
 
     }
+
 }
 
-
-// Search button
+// Search Button
 searchButton.addEventListener("click", searchCountry);
 
-
-// Enter key
+// Enter Key
 countryInput.addEventListener("keydown", function (event) {
 
     if (event.key === "Enter") {
