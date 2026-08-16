@@ -2,14 +2,23 @@ const countryInput = document.getElementById("countryInput");
 const searchButton = document.getElementById("searchButton");
 const message = document.getElementById("message");
 
-const countryName = document.querySelector(".country-card h2");
-const countryFlag = document.querySelector(".country-flag");
+const countryCard = document.querySelector(".country-card");
+const countryName = countryCard.querySelector("h2");
+const countryFlag = countryCard.querySelector(".country-flag");
 
-const infoValues = document.querySelectorAll(".country-info p span");
+const infoItems = countryCard.querySelectorAll(".country-info p");
 
-const API_KEY = "rc_live_9a912b4b31804010a72182fbb3572592";
+const capital = infoItems[0].querySelector("span");
+const region = infoItems[1].querySelector("span");
+const population = infoItems[2].querySelector("span");
+const currency = infoItems[3].querySelector("span");
+const language = infoItems[4]
+    ? infoItems[4].querySelector("span")
+    : null;
+
 
 async function searchCountry() {
+
     const country = countryInput.value.trim();
 
     if (country === "") {
@@ -22,53 +31,51 @@ async function searchCountry() {
     searchButton.textContent = "Searching...";
 
     try {
+
         const response = await fetch(
-            `https://api.restcountries.com/countries/v5/name?q=${encodeURIComponent(country)}`,
-            {
-                headers: {
-                    "Authorization": `Bearer ${API_KEY}`
-                }
-            }
+            `https://restcountries.com/v3.1/name/${encodeURIComponent(country)}`
         );
 
-        const result = await response.json();
-
-        console.log("API Response:", result);
-
         if (!response.ok) {
-            throw new Error(result.message || "API request failed");
+            throw new Error("Country not found.");
         }
 
-        const countries = result.data?.objects || [];
+        const countries = await response.json();
 
-        if (countries.length === 0) {
-            throw new Error("Country not found");
+        if (!countries || countries.length === 0) {
+            throw new Error("Country not found.");
         }
 
         const data = countries[0];
 
+        // Country name
         countryName.textContent =
-            data.names?.common || "Unknown";
+            data.name?.common || "Unknown";
 
+        // Country flag
         countryFlag.textContent =
-            data.flag?.emoji || "🌍";
+            data.flag || "🌍";
 
-        infoValues[0].textContent =
-            data.capitals?.[0] || "N/A";
+        // Capital
+        capital.textContent =
+            data.capital?.[0] || "N/A";
 
-        infoValues[1].textContent =
+        // Region
+        region.textContent =
             data.region || "N/A";
 
-        infoValues[2].textContent =
+        // Population
+        population.textContent =
             data.population
                 ? data.population.toLocaleString()
                 : "N/A";
 
+        // Currency
         const currencies = data.currencies
             ? Object.values(data.currencies)
             : [];
 
-        infoValues[3].textContent =
+        currency.textContent =
             currencies.length > 0
                 ? currencies[0].name +
                   (currencies[0].symbol
@@ -76,12 +83,13 @@ async function searchCountry() {
                       : "")
                 : "N/A";
 
+        // Language
         const languages = data.languages
             ? Object.values(data.languages)
             : [];
 
-        if (infoValues[4]) {
-            infoValues[4].textContent =
+        if (language) {
+            language.textContent =
                 languages.length > 0
                     ? languages.join(", ")
                     : "N/A";
@@ -100,8 +108,12 @@ async function searchCountry() {
         countryName.textContent = "Sorry!";
         countryFlag.textContent = "🌍";
 
-        infoValues.forEach(function (item) {
-            item.textContent = "—";
+        infoItems.forEach(function (item) {
+            const span = item.querySelector("span");
+
+            if (span) {
+                span.textContent = "—";
+            }
         });
 
     } finally {
@@ -111,10 +123,16 @@ async function searchCountry() {
     }
 }
 
+
+// Search button
 searchButton.addEventListener("click", searchCountry);
 
-countryInput.addEventListener("keydown", function(event) {
+
+// Press Enter to search
+countryInput.addEventListener("keydown", function (event) {
+
     if (event.key === "Enter") {
         searchCountry();
     }
+
 });
