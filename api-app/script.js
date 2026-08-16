@@ -1,20 +1,19 @@
+```javascript id="q4n8vz"
 const countryInput = document.getElementById("countryInput");
 const searchButton = document.getElementById("searchButton");
 const message = document.getElementById("message");
 
-const countryCard = document.querySelector(".country-card");
-const countryName = countryCard.querySelector("h2");
-const countryFlag = countryCard.querySelector(".country-flag");
+const countryName = document.getElementById("countryName");
+const countryFlag = document.getElementById("countryFlag");
+const capital = document.getElementById("capital");
+const region = document.getElementById("region");
+const population = document.getElementById("population");
+const currency = document.getElementById("currency");
+const language = document.getElementById("language");
 
-const infoItems = countryCard.querySelectorAll(".country-info p");
 
-const capital = infoItems[0].querySelector("span");
-const region = infoItems[1].querySelector("span");
-const population = infoItems[2].querySelector("span");
-const currency = infoItems[3].querySelector("span");
-const language = infoItems[4]
-    ? infoItems[4].querySelector("span")
-    : null;
+// Your REST Countries API key
+const API_KEY = "rc_live_9a912b4b31804010a72182fbb3572592";
 
 
 async function searchCountry() {
@@ -30,109 +29,173 @@ async function searchCountry() {
     searchButton.disabled = true;
     searchButton.textContent = "Searching...";
 
+
     try {
 
         const response = await fetch(
-            `https://restcountries.com/v3.1/name/${encodeURIComponent(country)}`
+            `https://api.restcountries.com/countries/v5?q=${encodeURIComponent(country)}`,
+            {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${API_KEY}`
+                }
+            }
         );
 
+
+        const result = await response.json();
+
+        console.log("API Response:", result);
+
+
         if (!response.ok) {
+            throw new Error(
+                result.message || "API request failed."
+            );
+        }
+
+
+        // Get countries from API response
+        const countries =
+            result.data?.objects ||
+            result.data ||
+            result.objects ||
+            [];
+
+
+        if (!Array.isArray(countries) || countries.length === 0) {
             throw new Error("Country not found.");
         }
 
-        const countries = await response.json();
-
-        if (!countries || countries.length === 0) {
-            throw new Error("Country not found.");
-        }
 
         const data = countries[0];
 
-        // Country name
+
+        // COUNTRY NAME
         countryName.textContent =
-            data.name?.common || "Unknown";
+            data.name?.common ||
+            data.names?.common ||
+            data.name ||
+            "Unknown";
 
-        // Country flag
+
+        // FLAG
         countryFlag.textContent =
-            data.flag || "🌍";
+            data.flag?.emoji ||
+            data.flag ||
+            "🌍";
 
-        // Capital
+
+        // CAPITAL
         capital.textContent =
-            data.capital?.[0] || "N/A";
+            data.capital?.[0] ||
+            data.capitals?.[0] ||
+            "N/A";
 
-        // Region
+
+        // REGION
         region.textContent =
-            data.region || "N/A";
+            data.region ||
+            "N/A";
 
-        // Population
+
+        // POPULATION
         population.textContent =
             data.population
-                ? data.population.toLocaleString()
+                ? Number(data.population).toLocaleString()
                 : "N/A";
 
-        // Currency
-        const currencies = data.currencies
-            ? Object.values(data.currencies)
-            : [];
 
-        currency.textContent =
-            currencies.length > 0
-                ? currencies[0].name +
-                  (currencies[0].symbol
-                      ? ` (${currencies[0].symbol})`
-                      : "")
-                : "N/A";
+        // CURRENCY
+        const currencies =
+            data.currencies
+                ? Object.values(data.currencies)
+                : [];
 
-        // Language
-        const languages = data.languages
-            ? Object.values(data.languages)
-            : [];
+
+        if (currencies.length > 0) {
+
+            currency.textContent =
+                currencies[0].name ||
+                currencies[0].code ||
+                "N/A";
+
+        } else {
+
+            currency.textContent = "N/A";
+
+        }
+
+
+        // LANGUAGE
+        const languages =
+            data.languages
+                ? Object.values(data.languages)
+                : [];
+
 
         if (language) {
+
             language.textContent =
                 languages.length > 0
                     ? languages.join(", ")
                     : "N/A";
+
         }
+
 
         message.textContent =
             "Country information loaded successfully.";
+
 
     } catch (error) {
 
         console.error("API Error:", error);
 
+
         message.textContent =
-            error.message || "Something went wrong.";
+            error.message ||
+            "Country not found. Please try again.";
+
 
         countryName.textContent = "Sorry!";
         countryFlag.textContent = "🌍";
 
-        infoItems.forEach(function (item) {
-            const span = item.querySelector("span");
+        capital.textContent = "—";
+        region.textContent = "—";
+        population.textContent = "—";
+        currency.textContent = "—";
 
-            if (span) {
-                span.textContent = "—";
-            }
-        });
+        if (language) {
+            language.textContent = "—";
+        }
 
     } finally {
 
         searchButton.disabled = false;
         searchButton.textContent = "Search";
+
     }
+
 }
 
 
-// Search button
-searchButton.addEventListener("click", searchCountry);
+// SEARCH BUTTON
+searchButton.addEventListener(
+    "click",
+    searchCountry
+);
 
 
-// Press Enter to search
-countryInput.addEventListener("keydown", function (event) {
+// ENTER KEY
+countryInput.addEventListener(
+    "keydown",
+    function (event) {
 
-    if (event.key === "Enter") {
-        searchCountry();
+        if (event.key === "Enter") {
+            searchCountry();
+        }
+
     }
-
-});
+);
+```
