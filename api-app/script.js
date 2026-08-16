@@ -16,7 +16,7 @@ const language = document.getElementById("language");
 // REST COUNTRIES API KEY
 // ========================================
 
-const API_KEY = "PASTE_YOUR_CURRENT_API_KEY_HERE";
+const API_KEY = "rc_live_9a912b4b31804010a72182fbb3572592";
 
 
 // ========================================
